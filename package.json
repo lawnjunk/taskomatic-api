@@ -1,0 +1,14 @@
+{
+  "name": "taskomatic-api",
+  "version": "0.1.0",
+  "description": "",
+  "main": "bin/index.js",
+  "scripts": {
+    "start": "node bin/index.js",
+    "test": "jest test --inline",
+    "test-watch": "jest watch"
+  },
+  "keywords": [],
+  "author": "slugbyte@slugbyte.com",
+  "license": "MIT"
+}
