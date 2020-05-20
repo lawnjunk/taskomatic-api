@@ -19,10 +19,11 @@ Run the following commands.
 
 ``` bash
 PORT=3000
-CORS_ORIGIN='localhost,https://taskomatic.slugbyte.com' //comma seporated list
-APP_SECRET='THIS IS VERY SECRET' // in production must use a RSA-KEY
+API_URL='http://localhost:3000'
+CORS_ORIGIN='localhost,https://taskomatic.slugbyte.com' # comma seporated list
+APP_SECRET='THIS IS PRIVATE KEY USED TO ENCRYPT AUTHENTICATION TOKENS' # In production should use a RSA-KEY
 REDIS_URI=""
-DEBUG=1
+DEBUG='app:*' # turn on dev logging
 ```
 
 ### Run the development test
@@ -122,7 +123,6 @@ The `task` endpoint is used to manage the CRUD opperations of the task model.
 ### DELETE /task/:id
 #### Requirements
 #### Response
-
 
 ## RANDOM TASK
 The `/randtask` endpoint is used to manage the CRUD opperations of the task model, with the added side-effect that it will automaticly be marked as completed after a random interval within 10 seconds.
