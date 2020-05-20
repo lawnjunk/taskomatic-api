@@ -1,5 +1,7 @@
 TASK-O-MATIC API
 ===
+[![Build Status](https://travis-ci.org/slugbyte/taskomatic-api.svg?branch=master)](https://travis-ci.org/slugbyte/taskomatic-api)
+
 A proof of concept task mangment API.
 
 ## SECURITY CONCERNS
