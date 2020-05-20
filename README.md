@@ -150,9 +150,9 @@ The `/randtask` endpoint is used to manage the CRUD opperations of the task mode
 
 ## Changelog
 0.1.0 -- init repo
+0.1.1 -- mvp express server
 
 ## Todo Roadmap
-0.1.1 -- mvp express server
 0.1.2 -- connect redis
 0.1.3 -- user model
 0.1.4 -- auth routes
