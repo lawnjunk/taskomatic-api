@@ -5,9 +5,9 @@ const crypto = require('crypto')
 
 // interface
 // resolves a hash
-const hashData = (data) => {
+const hashData = (data, secret) => {
   return new Promise((resolve, reject) => {
-    let hmac = crypto.createHmac('sha256', process.env.APP_SECRET)
+    let hmac = crypto.createHmac('sha256', secret)
     hmac.on('readable', () => {
       let result = hmac.read()
       if(!result)
@@ -21,8 +21,8 @@ const hashData = (data) => {
 }
 
 // resolves data 
-const verify = async (data, hash) => {
-  let result = await hashData(data)
+const verify = async (data, hash, secret) => {
+  let result = await hashData(data, secret)
   if(result !== hash)
     throw new Error('_HMAC_ERROR_ verification of data failed')
   return data

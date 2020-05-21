@@ -207,6 +207,7 @@ The `/randtask` endpoint is used to manage the CRUD opperations of the task mode
   * Assign a creator to each task. Have one endpoint to create a user (name/email), and one to get all the tasks for a given email
   * Once a task has been consumed, notify its creator by email
   * Create an authentication procedure between the client and the server using a HMAC signature
+    * TODO: make middleware that will add a HMAC header using the users Auth token, so they can decyrpt the token in the browser to verify
   * --Make the backend in Typescript--
 * DEV OPS
   * Deploy the application on AWS or GCP, or Azure
