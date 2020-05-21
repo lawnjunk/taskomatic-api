@@ -4,9 +4,9 @@
   "description": "",
   "main": "bin/index.js",
   "scripts": {
-    "start": "node bin/index.js",
+    "start": "node bin/taskomatic-api",
     "test": "jest test --runInBand",
-    "test-watch": "jest watch"
+    "test-watch": "jest --watch --runInBand"
   },
   "keywords": [],
   "author": "slugbyte@slugbyte.com",
@@ -21,6 +21,7 @@
     "http-errors": "^1.7.3",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
+    "redis": "^3.0.2",
     "uuid": "^8.0.0"
   },
   "devDependencies": {

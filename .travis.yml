@@ -1,9 +1,11 @@
 language: node_js
 node_js: '12.16.3'
 cache: npm 
+services:
+  - redis-server
 install: 
   - npm i
 env: 
-  - PORT=4000 API_URL="http://localhost:4000" CORS_ORIGIN="http://localhost:8080" APP_SECRET="fake secret key" REDIS_URI="" DEBUG="APP:*"
+  - PORT=4000 API_URL='http://localhost:4000' CORS_ORIGIN='http://localhost:8080' APP_SECRET='fake secret key' REDIS_URI='' DEBUG='app:*' REDIS_URI='redis://localhost:6379'
 script: 
   - npm run test
