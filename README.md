@@ -169,7 +169,20 @@ The `/randtask` endpoint is used to manage the CRUD opperations of the task mode
   * added redis to the travis config
   * converted the init script to an executable script
 * 0.1.3 -- user model
-
+  * created a user constructor
+  * added bcrypt password hashing and compare functionaly
+  * created a static createUser factory function to mange the following 
+    1. validate input
+    2. asyncronously hash password
+    3. instanciate a user model
+    4. validate user model
+    5. store user model in db
+  * refactored the db module
+    * added methods for working with items
+    * added methods for working with lists
+    * better validation
+    * curry magic to remove duplicate code :)
+    * added db module unit tests
 ## Todo Roadmap
 * 0.1.4 -- auth routes
 * 0.1.5 -- task model
