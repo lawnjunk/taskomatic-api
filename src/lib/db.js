@@ -4,29 +4,30 @@ const {promisify} = require('util')
 const redis = require('redis')
 
 // internal deps
-const errorMessage = require(`${__dirname}/error-message.js`)
+const errorMessage = require(`./error-message.js`)
 
 // modual constants
 const state = {
-  client: null
+  client: null,
   methods: {},
 }
 
 // helper functions
-const resetState = (){
+const resetState = () => {
   state.client = null
   state.methods = {}
 }
 
 const createClientMethod = (method) => {
-  debug(method)
-  return promisify(client[method]).bind(client)
+  debug(`createClientMethod ${method}`)
+  if (!state.client) throw new Error('no client found')
+  return promisify(state.client[method]).bind(state.client)
 }
 
 const createClientMethodInterface = (method) => (...args) => {
   if(!state[method]) 
     return Promise.reject(new Error(errorMessage.redisMethodCallFail(method)))
-  return state[method](...args)
+  return state.methods[method](...args)
 }
 
 // initClient sets up a redis connection and creates smart db request methods
@@ -43,9 +44,11 @@ const initClient = () => {
       debug('__DB_ERROR__')
       console.error(err)
     })
+
     state.methods = ['get', 'set', 'hmset', 'hgetall', 'quit']
-      .reduce((prop, result) => {...result, [prop]: createClientMethod(prop)})
-    return state.client
+      .reduce((result, prop) => 
+        ({[prop]: createClientMethod(prop), ...result}), {})
+    return resolve(state.client)
   })
 }
 
@@ -56,7 +59,7 @@ const quitClient = () => {
     return state.methods.quit()
     .then((result) => {
       resetState() 
-      return result
+      return resolve(result)
     })
   })
 }
