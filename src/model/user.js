@@ -1,4 +1,5 @@
 'use strict'
+
 // external deps
 const debug = require('debug')('app:user')
 const uuid = require('uuid').v1
@@ -102,6 +103,14 @@ User.findByID = async (id) => {
   debug('findById')
   let data = await db.fetchItem({id})
   return new User(data)
+}
+
+User.findByToken = async (token) => {
+  let {id} = await jwtVerify(token, process.env.APP_SECRET)
+  let user = User.findByID(id)
+  if(!user)
+    throw createError(401, '_AUTH_ERROR: user not found')
+  return user
 }
 
 module.exports = User
