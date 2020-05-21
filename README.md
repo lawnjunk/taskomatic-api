@@ -151,12 +151,31 @@ The `/randtask` endpoint is used to manage the CRUD opperations of the task mode
 ## Changelog
 0.1.0 -- init repo
 0.1.1 -- mvp express server
+  * created a db client wrapper lib
+    * created an express server module
+      * added morgan for request logging 
+      * added cors functionality
+      * added an app wide router and a helloworld route
+      * added the ability to start and stop the server
+      * all secertes and boot options are configured with ENV vars
+    * created an executable cli
+    * wrote a few basic integration tests to verify server is working
+    * added travisCI to the repo, test checks are now integrated into pull requests
+0.1.2 -- connect redis
+  * created a db client wrapper lib
+    * has the ability to start and stop the db client 
+    * has promisifyed db request methods
+  * added redis to the travis config
+  * renamed the executable in bin/ taskomatic-api
 
 ## Todo Roadmap
-0.1.2 -- connect redis
 0.1.3 -- user model
 0.1.4 -- auth routes
 0.1.5 -- task model
 0.1.6 -- task routes
 0.1.7 -- randtask routes
+0.1.8 -- error routes
+0.1.9 -- refactor
+0.1.10 -- dockerize
+0.1.11 -- continuous depoyment
 1.0.0 -- GET JOB
