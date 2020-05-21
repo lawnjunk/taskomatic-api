@@ -150,6 +150,7 @@ The `/randtask` endpoint is used to manage the CRUD opperations of the task mode
 
 ## Changelog
 * 0.1.0 -- init repo
+  * added boilerplate files (LISCENSE GITIGNORE PACKAGE.JSON README)
 * 0.1.1 -- mvp express server
   * created an express server module
     * added morgan for request logging 
