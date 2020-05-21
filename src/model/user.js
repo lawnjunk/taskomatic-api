@@ -4,8 +4,9 @@ const debug = require('debug')('app:user')
 const uuid = require('uuid').v1
 const assert = require('assert')
 const crypto = require('crypto')
-const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
+const {promisify} = require('util')
+const jwt = require('jsonwebtoken')
 const createError = require('http-errors')
 const {isEmail}  = require('valid.js').util
 
@@ -14,6 +15,9 @@ const db = require('../lib/db.js')
 const errorMessages = require('../lib/error-message.js')
 
 // helper methods
+const jwtSign = promisify(jwt.sign.bind(jwt))
+const jwtVerify = promisify(jwt.verify.bind(jwt))
+
 const hasRequiredInputData = async (props) => {
   debug('hasRequiredInputData')
   assert(props.username.length > 7, createError(400, 'invalid password'))
@@ -61,23 +65,28 @@ class User {
   }
 
   async createAuthToken(){
+    debug('createAuthToken')
     let seed = crypto.randomBytes(32).toString('base64')  
-    return await jwt.sign({seed, email: this.email, id: this.id})
+    return await jwtSign({seed, id: this.id}, process.env.APP_SECRET) 
   }
 
-  async verifyPassword(password){
-    let success = await bcrypt.compare(password, this.passwordHash)
-    if(!success)
-      throw createError(401, '_AUTH_ERROR_ password not valid')
-  }
-
-  async verifyToken(token){
-    let {id} = result = await promisify(jwt.verify)(token, process.env.APP_SECRET)
+  async verifyAuthToken(token){
+    debug('verifyAuthToken')
+    let {id} = await jwtVerify(token, process.env.APP_SECRET).catch(err => {
+      throw createError(401, '_AUTH_ERROR_ token not valid')
+    })
     if (this.id != id)
       throw createError(401, '_AUTH_ERROR_ token not valid')
     return this
   }
 
+  async verifyPassword(password){
+    debug('verifyPassword')
+    let success = await bcrypt.compare(password, this.passwordHash)
+    if(!success)
+      throw createError(401, '_AUTH_ERROR_ password not valid')
+    return this
+  }
 }
 
 // static methods
@@ -89,8 +98,9 @@ User.createUser = async (props) => {
   return await db.writeItem(user)
 }
 
-User.findUser = async (id) => {
-  let data = await db.fetchItem(id)
+User.findByID = async (id) => {
+  debug('findById')
+  let data = await db.fetchItem({id})
   return new User(data)
 }
 
