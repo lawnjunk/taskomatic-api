@@ -12,4 +12,6 @@ module.exports = {
   redisIDWriteError: () => formatError('_DB_WRITE_ERROR_ id is required'),
   redisIDReadError: () => formatError('_DB_READ_ERROR_ id is required'),
   redisIDDeleteError: () => formatError('_DB_DELETE_ERROR_ id is required'),
+  redisListIDPUSHError: () => formatError('_DB_LIST_PUSH_ERROR_ listID is required'),
+  redisListIDReadError: () => formatError('_DB_LIST_READ_ERROR_ listID is required'),
 }

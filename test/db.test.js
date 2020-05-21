@@ -60,4 +60,54 @@ describe('DB', () => {
     })
   })
 
+  describe('pushListItem', () => {
+    it('push a list item', () => {
+      return db.pushListItem({id: "789", listID: 'food', content: "one"})
+      .then(item => {
+        expect(item.id).toBe('789')
+        expect(item.listID).toBe('food')
+        expect(item.content).toBe('one')
+      })
+    })
+
+    it('push a list item', () => {
+      return db.pushListItem({id: "800", listID: 'food', content: "two"})
+      .then(item => {
+        expect(item.id).toBe('800')
+        expect(item.listID).toBe('food')
+        expect(item.content).toBe('two')
+      })
+    })
+
+    it('push a list item', () => {
+      return db.pushListItem({id: "801", listID: 'food', content: "three"})
+      .then(item => {
+        expect(item.id).toBe('801')
+        expect(item.listID).toBe('food')
+        expect(item.content).toBe('three')
+      })
+    })
+
+  })
+  
+  describe('fetchAllListItems', () => {
+     it('should have three items', () => {
+       return db.fetchAllListItems({listID: 'food'})
+       .then(list => {
+         expect(list.length).toBe(3)
+         expect(list[0].id).toBe('801')
+         expect(list[1].id).toBe('800')
+         expect(list[2].id).toBe('789')
+       })
+     })
+  })
+
+  describe('deleteList', () => {
+     it('should delete the list', () => {
+       return db.deleteList({listID: 'food'})
+       .then(count => {
+         expect(count).toBe(1)
+       })
+     })
+  })
 })
