@@ -14,4 +14,5 @@ module.exports = {
   redisIDDeleteError: () => formatError('_DB_DELETE_ERROR_ id is required'),
   redisListIDPUSHError: () => formatError('_DB_LIST_PUSH_ERROR_ listID is required'),
   redisListIDReadError: () => formatError('_DB_LIST_READ_ERROR_ listID is required'),
+  authBadPassword: () => formatError('_AUTH_ERROR_ incorrect password'),
 }

@@ -8,37 +8,25 @@ const {isEmail}  = require('valid.js').util
 
 // internal deps
 const db = require('../lib/db.js')
+const errorMessages = require('../lib/error-message.js')
 
 // helper methods
-const hasRequiredProps = (props) => {
-  debug('hasRequiredProps')
-  return new Promise((resolve, reject) => {
-    try {
-      assert(isEmail(props.email), 'invalid email')
-      assert(props.firstName, 'firstName required')
-      assert(props.lastName, 'lastName required', )
-      assert(props.username.length > 7, 'username not valid')
-      // could make better validation later
-      assert(props.password.length > 7, 'password not valid') 
-      resolve()
-    } catch (err){
-      reject(err)
-    }
-  })
+const hasRequiredInputData = async (props) => {
+  debug('hasRequiredInputData')
+  assert(isEmail(props.email), 'invalid email')
+  assert(props.firstName, 'firstName required')
+  assert(props.lastName, 'lastName required', )
+  assert(props.username.length > 7, 'username not valid')
+  assert(props.password.length > 7, 'password not valid') 
 }
 
-const hashPassword = (password) => {
-  debug('hashPassword')
-  return bcrypt.hash(password, 8)
-}
+const hashPassword = async (password) => bcrypt.hash(password, 8)
 
-const comparePassword = (password, user) => {
+const comparePassword = async (password, user) => {
   debug('comparePassword')
-  return bcrypt.compare(password, user.passwordHash)
-  .then(success => {
-    if(!success) return Promise.reject(new Error('Incorrect Password'))
-    return user
-  })
+  let success = await bcrypt.compare(password, user.passwordHash)
+  if(!success) throw new Error(errorMessages.authBadPassword())
+  return user
 }
 
 // interface
@@ -73,14 +61,10 @@ class User {
 // static methods
 User.createUser = async (props) => {
   debug('createUser')
-  await hasRequiredProps(props)
-  console.log('boom')
+  await hasRequiredInputData(props)
   let passwordHash = await hashPassword(props.password)
-  console.log('bing')
   let user = new User({passwordHash, ...props})
-  console.log(user)
-  db.storeObject(user)
-  return user
+  return await db.writeItem(user)
 }
 
 module.exports = User
