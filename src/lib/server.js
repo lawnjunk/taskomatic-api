@@ -45,12 +45,15 @@ let stop = async () => {
   return new Promise((resolve, reject) => {
   if(!state.isOn) return reject(new Error(errorMessage.fatalShutdown()))
     db.quitClient()
-    state.httpServer.close((err) => {
-      if(err) return reject(err)
-      state.isOn = false
-      state.httpServer = null
-      debug('SERVER SHUTDOWN COMPLETE')
-      resolve(state)
+    .catch(console.error)
+    .finally(() => {
+      state.httpServer.close((err) => {
+        if(err) return reject(err)
+        state.isOn = false
+        state.httpServer = null
+        debug('SERVER SHUTDOWN COMPLETE')
+        resolve(state)
+      })
     })
   })
 }
