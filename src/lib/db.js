@@ -24,54 +24,100 @@ const createClientMethod = (method) => {
   return promisify(state.client[method]).bind(state.client)
 }
 
-const createClientMethodInterface = (method) => (...args) => {
-  if(!state[method]) 
-    return Promise.reject(new Error(errorMessage.redisMethodCallFail(method)))
-  return state.methods[method](...args)
-}
-
 // initClient sets up a redis connection and creates smart db request methods
-const initClient = () => {
+const initClient = async () => {
   debug('initClient')
-  return new Promise((resolve, reject) => {
-    if(state.client) return reject(new Error(errorMessage.fatalRedisInit))
-    try {
-      state.client = redis.createClient(process.env.REDIS_URI) 
-    } catch (err){
-      if (err) return reject(err)
-    }
-    state.client.on('error', (err) => {
-      debug('__DB_ERROR__')
-      console.error(err)
-    })
-
-    state.methods = ['get', 'set', 'hmset', 'hgetall', 'quit']
-      .reduce((result, prop) => 
-        ({[prop]: createClientMethod(prop), ...result}), {})
-    return resolve(state.client)
+  if(state.client) 
+    throw new Error(errorMessage.fatalRedisInit)
+  state.client = redis.createClient(process.env.REDIS_URI) 
+  state.client.on('error', (err) => {
+    debug('__DB_ERROR_EVENT__')
+    console.error(err)
   })
+  state.methods = Object.keys(Object.getPrototypeOf(state.client))
+    .concat(['quit'])
+    .filter(prop => (typeof state.client[prop]) == 'function')
+    .reduce((result, prop) => 
+      ({[prop]: createClientMethod(prop), ...result}), {})
+  return state.client
 }
 
-const quitClient = () => {
+const quitClient = async () => {
   debug('quitClient')
-  return new Promise((resolve, reject) => {
-    if(!state.client) return reject(new Error(errorMessage.fatalRedisQuit))
-    return state.methods.quit()
-    .then((result) => {
-      resetState() 
-      return resolve(result)
-    })
-  })
+  if(!state.client) 
+    throw new Error(errorMessage.fatalRedisQuit)
+  let result = await state.methods.quit()
+  resetState()
+  return result
 }
+
+const writeItem = async (item) => {
+  debug('writeItem')
+  let {hmset} = state.methods
+  if(!hmset) 
+    throw new Error(errorMessage.redisMethodCallFail('hmset'))
+  let {id} = item
+  if(!id)
+    throw new Error(errorMessage.redisIDWriteError())
+  let keys = Object.keys(item)
+  let values = Object.values(item)
+  let hmsetValues = []
+  keys.forEach((key, i) => {
+    hmsetValues.push(key)
+    hmsetValues.push(values[i])
+  })
+  await hmset(id, ...hmsetValues)
+  return item
+}
+
+const fetchItem = async (item) => {
+  debug('fetchItemByID')
+  let {hgetall} = state.methods  
+  if(!hgetall) 
+    throw new Error(errorMessage.redisMethodCallFail('hgetall'))
+  if(!item.id)
+    throw new Error(errorMessage.redisIDReadError())
+  return await hgetall(item.id)
+}
+
+const deleteItem = async (item) => {
+  debug('deleteItemByID')
+  let {del} = state.methods
+  if (!del) 
+    throw new Error(errorMessage.redisMethodCallFail('hdel'))
+  if(!item.id)
+    throw new Error(errorMessage.redisIDDeleteError())
+  return await del(item.id)
+}
+
+const listPushItem = async (item) => {
+  let {lpush} = state.methods
+  if(!lpush) 
+    throw new Error(errorMessage.redisMethodCallFail('lpush'))
+  let listId = item.listId
+  let json = JSON.stringify(item)
+  // TODO: return the await
+  return await lpush(id, json)
+}
+
+const listFetchAllById  = async (id) => {
+  let {llen, lrange} = state.methods
+  if(!llen) 
+    throw new Error(errorMessage.redisMethodCallFail('llen'))
+  if(!lrange) 
+    throw new Error(errorMessage.redisMethodCallFail('lrange'))
+  let length = await llen(id)
+  let list = await lrange(0, length + 1)
+  return list.map(JSON.parse)
+}
+
 
 // interface
 module.exports = {
   initClient,
   quitClient, 
-  set: createClientMethodInterface('set'),
-  get: createClientMethodInterface('get'),
-  hmset: createClientMethodInterface('hmset'),
-  hgetall: createClientMethodInterface('hgetall'),
-  quit: createClientMethodInterface('quit'),
+  writeItem,
+  fetchItem, 
+  deleteItem,
   state,
 }

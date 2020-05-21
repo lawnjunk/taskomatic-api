@@ -53,6 +53,7 @@ Below is a list of the User-Model properties, along with their descriptions.
 ### TASK
 Below is a list of the Task-Model properties, along with their descriptions.  
 * `id`
+* `listID`
 * `userID`
 * `description`
 * `completed`
@@ -167,9 +168,9 @@ The `/randtask` endpoint is used to manage the CRUD opperations of the task mode
     * has promisifyed db request methods
   * added redis to the travis config
   * converted the init script to an executable script
+* 0.1.3 -- user model
 
 ## Todo Roadmap
-* 0.1.3 -- user model
 * 0.1.4 -- auth routes
 * 0.1.5 -- task model
 * 0.1.6 -- task routes
