@@ -183,9 +183,16 @@ The `/randtask` endpoint is used to manage the CRUD opperations of the task mode
     * better validation
     * curry magic to remove duplicate code :)
     * added db module unit tests
+* 0.1.4 -- auth routes
+  * Added Noe's challenges to readme
+  * added a hmac helper module
+  * added basic and bearer auth express midleware
+  * filled out User models auth functionality
+  * added auth routes
+  * added better User model unit tests
+  * added auth route integration tests
 
 ## Todo Roadmap
-* 0.1.4 -- auth routes
 * 0.1.5 -- task model
 * 0.1.6 -- task routes
 * 0.1.7 -- randtask routes
