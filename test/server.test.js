@@ -52,16 +52,16 @@ describe('server.js', () => {
   })
 
 
-  describe('hello world', () => {
-    beforeAll(() => server.start())
-    afterAll(() => server.stop())
+  //describe('hello world', () => {
+    //beforeAll(() => server.start())
+    //afterAll(() => server.stop())
 
-    it('GET / should return a hello world', () => {
-      return request.get(`${apiURL}`)
-      .then(res => {
-        expect(res.status).toBe(200)
-        expect(res.body.test).toBe('hello world')
-      })
-    })
-  })
+    //it('GET / should return a hello world', () => {
+      //return request.get(`${apiURL}`)
+      //.then(res => {
+        //expect(res.status).toBe(200)
+        //expect(res.body.test).toBe('hello world')
+      //})
+    //})
+  //})
 })

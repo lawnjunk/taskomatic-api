@@ -183,8 +183,16 @@ The `/randtask` endpoint is used to manage the CRUD opperations of the task mode
     * better validation
     * curry magic to remove duplicate code :)
     * added db module unit tests
-## Todo Roadmap
 * 0.1.4 -- auth routes
+  * Added Noe's challenges to readme
+  * added a hmac helper module
+  * added basic and bearer auth express midleware
+  * filled out User models auth functionality
+  * added auth routes
+  * added better User model unit tests
+  * added auth route integration tests
+
+## Todo Roadmap
 * 0.1.5 -- task model
 * 0.1.6 -- task routes
 * 0.1.7 -- randtask routes
@@ -193,3 +201,34 @@ The `/randtask` endpoint is used to manage the CRUD opperations of the task mode
 * 0.1.10 -- dockerize
 * 0.1.11 -- continuous depoyment
 * 1.0.0 -- GET JOB
+
+## GOALS
+* REQUIREMENTS
+  * Build a task management API.
+  * A user is able to submit a task through an endpoint.
+  * The backend will consume the task (a random timer delay).
+  * Through another endpoint, the user can check the status of the task.
+* CHALLENGES
+  * ? A task is first created as draft with a 24h life time, it needs to be confirmed to be added to the task queue.
+  * ? Use Redis for the previous challenge
+  * Assign a creator to each task. Have one endpoint to create a user (name/email), and one to get all the tasks for a given email
+  * Once a task has been consumed, notify its creator by email
+  * Create an authentication procedure between the client and the server using a HMAC signature
+    * TODO: make middleware that will add a HMAC header using the users Auth token, so they can decyrpt the token in the browser to verify
+  * --Make the backend in Typescript--
+* DEV OPS
+  * Deploy the application on AWS or GCP, or Azure
+  * Make the app buildable as a container
+  * Make a Docker Compose file for the app
+  * Write a basic helm chart to deploy the app in Kubernetes (if you do this, you can skip the previous task)
+  * How would you handle the storage of secrets in the deployment process?
+* FULL-STACK CHALLENGES
+  * Use React to build the web client
+  * Store the application state in redux
+  * Use redux-saga
+  * Have a theme and use JSS in each component
+  * If client is offline, store the sent tasks and send them once online
+
+
+
+

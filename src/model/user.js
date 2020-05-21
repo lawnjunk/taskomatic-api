@@ -1,9 +1,14 @@
 'use strict'
+
 // external deps
 const debug = require('debug')('app:user')
 const uuid = require('uuid').v1
 const assert = require('assert')
+const crypto = require('crypto')
 const bcrypt = require('bcrypt')
+const {promisify} = require('util')
+const jwt = require('jsonwebtoken')
+const createError = require('http-errors')
 const {isEmail}  = require('valid.js').util
 
 // internal deps
@@ -11,13 +16,16 @@ const db = require('../lib/db.js')
 const errorMessages = require('../lib/error-message.js')
 
 // helper methods
+const jwtSign = promisify(jwt.sign.bind(jwt))
+const jwtVerify = promisify(jwt.verify.bind(jwt))
+
 const hasRequiredInputData = async (props) => {
   debug('hasRequiredInputData')
-  assert(isEmail(props.email), 'invalid email')
-  assert(props.firstName, 'firstName required')
-  assert(props.lastName, 'lastName required', )
-  assert(props.username.length > 7, 'username not valid')
-  assert(props.password.length > 7, 'password not valid') 
+  assert(props.username.length > 7, createError(400, 'invalid password'))
+  assert(props.password.length > 7, createError(400, 'invalid password'))
+  assert(isEmail(props.email), createError(400, 'invalid email'))
+  assert(props.firstName, createError(400, 'invlaid firstName'))
+  assert(props.lastName, createError(400, 'invalid lastName'))
 }
 
 const hashPassword = async (password) => bcrypt.hash(password, 8)
@@ -25,7 +33,7 @@ const hashPassword = async (password) => bcrypt.hash(password, 8)
 const comparePassword = async (password, user) => {
   debug('comparePassword')
   let success = await bcrypt.compare(password, user.passwordHash)
-  if(!success) throw new Error(errorMessages.authBadPassword())
+  if(!success) throw createError(400, errorMessages.authBadPassword())
   return user
 }
 
@@ -33,7 +41,7 @@ const comparePassword = async (password, user) => {
 class User {
   constructor(props){
     debug('constructor')
-    this.id = 'user:' + uuid()
+    this.id = props.id || 'user:' + props.email 
     this.email = props.email
     this.username = props.username
     this.lastName = props.lastName
@@ -44,17 +52,41 @@ class User {
 
   validate(){
     debug('validate')
-    assert(this.id.startsWith('user:'), 'invalid id')
-    assert(this.username.length > 7, 'invalid password')
-    assert(isEmail(this.email), 'invalid email')
-    assert(this.passwordHash, 'invalid passwordHash')
-    assert(this.firstName, 'invlaid firstName')
-    assert(this.lastName, 'invalid lastName')
+    assert(this.id.startsWith('user:'), createError(400, 'invalid id'))
+    assert(this.username.length > 7, createError(400, 'invalid password'))
+    assert(isEmail(this.email), createError(400, 'invalid email'))
+    assert(this.passwordHash, createError(400, 'invalid passwordHash'))
+    assert(this.firstName, createError(400, 'invlaid firstName'))
+    assert(this.lastName, createError(400, 'invalid lastName'))
   }
 
   toSafeJSON(){
     debug('toSafeJSON')
     return JSON.stringify(Object.assign({}, this, {passwordHash: undefined}))
+  }
+
+  async createAuthToken(){
+    debug('createAuthToken')
+    let seed = crypto.randomBytes(32).toString('base64')  
+    return await jwtSign({seed, id: this.id}, process.env.APP_SECRET) 
+  }
+
+  async verifyAuthToken(token){
+    debug('verifyAuthToken')
+    let {id} = await jwtVerify(token, process.env.APP_SECRET).catch(err => {
+      throw createError(401, '_AUTH_ERROR_ token not valid')
+    })
+    if (this.id != id)
+      throw createError(401, '_AUTH_ERROR_ token not valid')
+    return this
+  }
+
+  async verifyPassword(password){
+    debug('verifyPassword')
+    let success = await bcrypt.compare(password, this.passwordHash)
+    if(!success)
+      throw createError(401, '_AUTH_ERROR_ password not valid')
+    return this
   }
 }
 
@@ -65,6 +97,20 @@ User.createUser = async (props) => {
   let passwordHash = await hashPassword(props.password)
   let user = new User({passwordHash, ...props})
   return await db.writeItem(user)
+}
+
+User.findByID = async (id) => {
+  debug('findById')
+  let data = await db.fetchItem({id})
+  return new User(data)
+}
+
+User.findByToken = async (token) => {
+  let {id} = await jwtVerify(token, process.env.APP_SECRET)
+  let user = User.findByID(id)
+  if(!user)
+    throw createError(401, '_AUTH_ERROR: user not found')
+  return user
 }
 
 module.exports = User
