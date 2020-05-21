@@ -9,7 +9,7 @@ const User = require('../model/user.js')
 // helper functions
 let validateBasicAuth = async (email, password) => {
   debug('validateBasicAuth')
-  let user = await findByID('user:' + email)
+  let user = await User.findByID('user:' + email)
   return await user.verifyPassword(password)
 }
 
@@ -24,7 +24,7 @@ module.exports = (req, res, next) => {
   if(!encoded)
     return next(createError(400, 'AUTH ERROR: not basic auth'))
 
-  let decoded = new Buffer(encoded, 'base64').toString()
+  let decoded = Buffer.from(encoded, 'base64').toString()
   let [email, password] = decoded.split(':')
   if(!email || !password)
     return next(createError(401, 'AUTH ERROR: username or password missing'))

@@ -85,7 +85,7 @@ const initClient = async () => {
 }
 
 const quitClient = async () => {
-  assertClientExists()
+  debug('quitClient')
   let result = await doit('quit') 
   resetState()
   return result
