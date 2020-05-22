@@ -9,6 +9,7 @@ const {Router} = require('express')
 const User = require('../model/user.js')
 const hmac = require('../lib/hmac.js')
 const basic = require('../middleware/basic-auth.js')
+const signing = require('../middleware/signing-middleare.js')
 
 // route config 
 const router = new Router()

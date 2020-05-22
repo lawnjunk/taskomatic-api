@@ -127,7 +127,8 @@ const deleteList = async (item) => deleteItem({id: item.listID})
 // resolves item that was pushed
 const pushListItem = async (item) => {
   debug('pushListItem')
-  if(!item.listID) throw new Error(errorMessage.redisMethodCallFail('lpush'))
+  if(!item.listID) 
+    throw new Error(errorMessage.redisMethodCallFail('lpush'))
   let json = JSON.stringify(item)
   await doit('lpush', item.listID, json)
   return item

@@ -2,7 +2,6 @@
 
 // external deps
 const debug = require('debug')('app:user')
-const uuid = require('uuid').v1
 const assert = require('assert')
 const crypto = require('crypto')
 const bcrypt = require('bcrypt')
