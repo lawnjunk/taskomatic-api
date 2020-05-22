@@ -2,21 +2,21 @@ TASK-O-MATIC API
 ===
 [![Build Status](https://travis-ci.org/slugbyte/taskomatic-api.svg?branch=master)](https://travis-ci.org/slugbyte/taskomatic-api)
 
-A proof of concept task mangment API.
+A proof of concept task management API.
 
 ## SECURITY CONCERNS
-Unless this application is protected with an HTTPS connection the requests and responses are subject to man in the middle attacks and snooping.
+Unless this application is protected with an HTTPS connection, the requests and responses will be subject to man in the middle attacks and snooping.
 In production the application should be deployed behind an HTTPS-Proxy server to prevent misuse.
 
-## DEVELOPMENAT SETUP
+## DEVELOPMENT SETUP
 ### Access the source
 Run the following commands.
 1. `git clone https://github.com/slugbyte/taskomatic-api.git` will download the source
-1. `npm install` will install the depependent node modules.
-### Setup extenral dependencies 
+1. `npm install` will install the dependent node modules.
+### Setup external dependencies 
 * Redis server
 
-### Configure the enviroment
+### Configure the environment
 * Create a `.env` file in the root directory of this repo based on the following example file.
 
 ``` bash
@@ -29,9 +29,9 @@ DEBUG='app:*' # turn on dev logging
 ```
 
 ### Run the development test
-The following commands will execute the test suite.
-* `npm run test` -- this command will run the test-suit one time.
-* `npm run test-watch` -- this command will efictavly continuly  watch for changes to the files in this repo, and automaticly re-run the test-suit after any change.
+The following commands will execute the test-suite.
+* `npm run test` -- this command will run the test-suite one time.
+* `npm run test-watch` -- this command will continually watch for changes to the files in this repo, and automatically re-run the test-suite after any change.
 
 ### Start the server
 Run the following command to boot the server.
@@ -60,10 +60,10 @@ Below is a list of the Task-Model properties, along with their descriptions.
 * `timestamp`
 
 ## API Interface 
-The Taskomatic API implaments a REST interface. Each endpoint allows an http-client to create, read, update, and delete (CRUD) a model using HTTP the appropiate HTTP methods. 
+The Taskomatic API implements a REST interface. Each endpoint allows an http-client to create, read, update, and delete (CRUD) a model using HTTP the appropiate HTTP methods. 
 
 ## AUTH
-The `/auth` endpoint is used to manage the CRUD opperations of user model, as well as generate authentiation tokens.
+The `/auth` endpoint is used to manage the CRUD operations of User-Model, as well as generate authentication tokens.
 
 ### POST /auth
 Create a user and recieve an authentication token.
@@ -82,7 +82,7 @@ Create a user and recieve an authentication token.
 ```
 
 #### Response
-The server will return a json object that contains an authentication token, that can be used to make task requests.
+The server will return a JSON object that contains an authentication token, that can be used to make task requests.
 ``` json
 {
   "authToken": "ZXhhbXBsZSB0b2tlbiBleGFtcGxlIHRva2VuIGV4YW1wbGUgdG9rZW4K",
@@ -95,7 +95,7 @@ Retrieve an authentication token for an existing user.
 #### Response
 
 ### UPDATE /auth
-Update a users credientials.
+Update a user's credentials.
 #### Requirements
 #### Response
 
@@ -128,7 +128,7 @@ The `task` endpoint is used to manage the CRUD opperations of the task model.
 #### Response
 
 ## RANDOM TASK
-The `/randtask` endpoint is used to manage the CRUD opperations of the task model, with the added side-effect that it will automaticly be marked as completed after a random interval within 10 seconds.
+The `/randtask` endpoint is used to manage the CRUD operations of the Task-Model, with the added side effect that it will automatically be marked as completed after a random interval within 10 seconds.
 ### POST /randtask
 #### Requirements
 #### Response
@@ -186,7 +186,7 @@ The `/randtask` endpoint is used to manage the CRUD opperations of the task mode
 * 0.1.4 -- auth routes
   * Added Noe's challenges to readme
   * added a hmac helper module
-  * added basic and bearer auth express midleware
+  * added basic and bearer auth express middleware
   * filled out User models auth functionality
   * added auth routes
   * added better User model unit tests
@@ -199,7 +199,7 @@ The `/randtask` endpoint is used to manage the CRUD opperations of the task mode
 * 0.1.8 -- error routes
 * 0.1.9 -- refactor
 * 0.1.10 -- dockerize
-* 0.1.11 -- continuous depoyment
+* 0.1.11 -- continuous deployment
 * 1.0.0 -- GET JOB
 
 ## GOALS
