@@ -87,11 +87,16 @@ class User {
       throw createError(401, '_AUTH_ERROR_ password not valid')
     return this
   }
+  
+  async delete(){
+    debug('delete', this.id)
+    await db.deleteItem({id: this.id})
+  }
 }
 
 // static methods
 User.createUser = async (props) => {
-  debug('createUser')
+  debug('createUser', props.email)
   await hasRequiredInputData(props)
   let passwordHash = await hashPassword(props.password)
   let user = new User({passwordHash, ...props})

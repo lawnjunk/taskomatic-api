@@ -54,6 +54,11 @@ class  Task {
     assert(isDate(this.timestamp),
       createError(400, 'invalid date'))
   }
+
+  async deleteList(){
+    debug('deleteList', this.listID)
+    await db.deleteItem({id: this.listID})
+  }
 }
 
 Task.createTask = async (props) => {

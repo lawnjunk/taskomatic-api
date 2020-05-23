@@ -9,7 +9,10 @@ const mockUser = require('./mock/mock-user.js')
 describe('User Model', () => {
   beforeAll(db.initClient)
   //afterAll(db.deleteItem({id: 'user:example@slugbyte.com'})
-  afterAll(db.quitClient)
+  afterAll(async () => {
+    await mockUser.cleanup()
+    await db.quitClient()
+  })
 
   it('should create a user', async () => {
     let {user, input} = await mockUser.getUser()

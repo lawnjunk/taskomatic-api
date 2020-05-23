@@ -5,8 +5,10 @@ const faker = require('faker')
 // internal deps
 const User = require('../../src/model/user.js')
 
-// interface
+// module state
+let cache = []
 
+// interface
 const getInput = () => ({
   username: faker.internet.userName() + faker.internet.userName(),
   password: faker.internet.password() + faker.internet.password(),
@@ -15,12 +17,19 @@ const getInput = () => ({
   lastName: faker.name.lastName(),
 })
 
-
 const getUser = async () => {
   let input = getInput()
   let user = await User.createUser(input)
+  cache.push(user)
   return {user, input}
 }
 
-module.exports = {getInput, getUser}
+const cleanup = async () => {
+  debug('cleanup')
+  await Promise.all(cache.map(async (user) => {
+    await user.delete()
+  }))
+  cache = []
+}
 
+module.exports = {getInput, getUser, cleanup}
