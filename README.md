@@ -192,7 +192,12 @@ The `/randtask` endpoint is used to manage the CRUD operations of the Task-Model
   * added better User model unit tests
   * added auth route integration tests
 * 0.1.5 -- task model
-  * added mock-user and mock-test for use in testing
+  * added mock-user and mock-test for use in testing  
+  * added mock-util for cleaning up the DB
+  * db module now implents lists using hash maps
+  * all tests were refactored to use the new mocking modules
+  * the task model has full crud
+  * the task model has been unit tested
 
 ## Todo Roadmap
 * 0.1.6 -- task routes
