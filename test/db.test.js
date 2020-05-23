@@ -165,7 +165,6 @@ describe('DB', () => {
        let result = await mockTask.getTasks()
        return db.deleteList({listID: 'task:' + result.user.email}) 
        .then(count => {
-         console.log(count)
          expect(count).toBe(3)
        })
      })
