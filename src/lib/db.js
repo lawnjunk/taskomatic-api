@@ -80,6 +80,8 @@ const objectToArray = (data) => {
   let result = []
   keys.forEach((key, i) => {
     result.push(key)
+    if(values[i] instanceof Date)
+      return result.push(values[i].toISOString())
     result.push(values[i])
   })
   return result

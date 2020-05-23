@@ -30,12 +30,19 @@ const hasRequiredInputData = async (props) => {
 class  Task {
   constructor(props){
     debug('constructor')
-    this.id = 'task:' + props.user.email + ':' + uuid()
-    this.listID = 'task:' + props.user.email
-    this.userID = props.user.id
+    this.id = props.id || 'task:' + props.user.email + ':' + uuid()
+    this.listID = props.listID || 'task:' + props.user.email
+    this.userID = props.userID || props.user.id
     this.description = props.description
-    this.completed = props.completed
-    this.timestamp = new Date()
+    this.timestamp = props.timestamp ? new Date(props.timestamp): new Date()
+
+    switch(typeof props.completed){
+      case 'boolean':
+        this.completed = props.completed
+        break
+      case 'string':
+        this.completed = props.completed === 'true'
+    }
     this.validate()
   }
 
@@ -76,17 +83,20 @@ Task.createTask = async (props) => {
   debug('createTask')
   await hasRequiredInputData(props)
   let task = new Task(props)
-  return await db.addListItem(task)
+  await db.addListItem(task)
+  return task
 }
 
 Task.fetchTaskById = async (id) => {
   debug('fetchById')
-  return db.fetchItem({id: id})
+  let task = await db.fetchItem({id: id})
+  return task ? new Task(task) : null
 }
 
 Task.fetchTaskListByUserEmail = async (email) => {
   debug('fetchTaskListByUserEmail')
-  return db.fetchAllListItems({listID: 'task:' + email})
+  let tasks = await db.fetchAllListItems({listID: 'task:' + email})
+  return tasks.map(task => new Task(task))
 }
 
 Task.deleteTaskListByUserEmail = async (email) => {
