@@ -23,4 +23,26 @@ taskRouter.post('/task', bearer, jsonParser, signing, async (req, res) => {
   res.signJSON(task)
 })
 
+taskRouter.get('/task/:id', bearer, signing, async (req, res) => {
+  let task = await Task.fetchTaskById(req.params.id)
+  res.signJSON(task)
+}
+
+taskRouter.get('/task', bearer, signing, async (req, res) => {
+  let task = await Task.fetchTaskListByUserEmail(req.user.email)
+  res.signJSON(task)
+})
+
+taskRouter.put('/task/:id', bearer, jsonParser, signing, async (req, res) => {
+  let task = await Task.fetchTaskById(req.params.id)
+  let result = await task.update(req.body) 
+  res.signJSON(result)
+})
+
+taskRouter.delete('/task/', bearer, jsonParser, signing, async (req, res) => {
+  let task = await Task.fetchTaskById(req.params.id)
+  let result = await task.update(req.body) 
+  res.signJSON(result)
+})
+
 module.exports = taskRouter

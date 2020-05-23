@@ -20,7 +20,6 @@ describe('server.js', () => {
     it('should not be running', () => {
       expect(server.state.isOn).toBeFalsy()
       expect(server.state.httpServer).toBeNull()
-      expect(server.state.app).toBeTruthy()
     })
   })
 
@@ -30,12 +29,10 @@ describe('server.js', () => {
         .then((state) => {
           expect(state.isOn).toBeTruthy()
           expect(state.httpServer).toBeTruthy()
-          expect(state.app).toBeTruthy()
           return server.stop()
         }).then(state => {
           expect(state.isOn).toBeFalsy()
           expect(state.httpServer).toBeFalsy()
-          expect(state.app).toBeTruthy()
         })
     })
   })
