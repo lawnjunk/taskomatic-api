@@ -3,110 +3,170 @@ require('dotenv').config(`${__dirname}/../.env`)
 
 // internal modules
 const db = require('../src/lib/db.js')
+const mockTask = require('./mock/mock-task.js')
+const mockUtil = require('./mock/mock-util.js')
 
 // test suite
 describe('DB', () => {
   beforeAll(db.initClient)
+  afterEach(mockUtil.cleanup)
   afterAll(db.quitClient)
 
   describe('writeItem', () => {
-    it('should write and item that has an id', () => {
-      return db.writeItem({id: "12345", content: "cool beans"})
-      .then(item => {
-        expect(item.id).toBe('12345')
-        expect(item.content).toBe('cool beans')
-      })
+    it('should write and item that has an id', async () => {
+      let item = await mockUtil.writeItem({id: '12345', content: 'cool beans'})
+      expect(item.id).toBe('12345')
+      expect(item.content).toBe('cool beans')
     })
 
-    it('write item w/o id should throw an error', () => { 
-      return db.writeItem({content: "cool beans"})
+    it('write item w/o id should throw an error', async () => { 
+      return db.writeItem({content: 'cool beans'})
       .then(() => Promise.reject(new Error('failed')))
       .catch(err => {
-        expect(err.message.startsWith('_DB_WRITE_ERROR_ id is required')).toBeTruthy()
+        expect(err.message.startsWith('_DB_WRITE_ERROR_')).toBeTruthy()
       })
     })
   })
   
   describe('fetchItem', () => {
-    it('should fetch the 12345 item', () => {
-      return db.fetchItem({id: "12345"})
+    it('should fetch the 12345 item', async () => {
+      let item = await mockUtil.writeItem({id: '12345', content: 'cool beans'})
+      return db.fetchItem({id: '12345'})
       .then(item => {
         expect(item.id).toBe('12345')
         expect(item.content).toBe('cool beans')
       })
     })
 
-    it('bad id should resolve null', () => {
-      return db.fetchItem({id: "54321"})
-      .then(item => {
-        expect(item).toBeNull()
+    it('bad id should resolve null', async () => {
+      let result = await db.fetchItem({id: '54321'})
+      expect(result).toBeNull()
+    })
+  })
+  
+  describe('updateItem', () => {
+    it('should update the 12345 item', async () => {
+      let item = await mockUtil.writeItem({id: '12345', content: 'cool beans'})
+      let result = await db.updateItem({id: '12345', content: 'snack'})
+      expect(result.content).toBe('snack')
+    })
+
+    it('bad id should throw error', async () => {
+      await db.updateItem({id: '12345', content: 'snack'})
+      .catch(err => {
+        expect(err.message.startsWith('_REDIS_UPDATE_ERROR_')).toBeTruthy()
       })
     })
   })
 
   describe('deleteItem', () => {
-    it('should delete the 12345 item', () => {
-      return db.deleteItem({id: "12345"})
-      .then(count => {
-        expect(count > 0).toBeTruthy()
-      })
+    it('should delete the 12345 item', async () => {
+      let item = await mockUtil.writeItem({id: '12345', content: 'cool beans'})
+      let result = await db.deleteItem({id: '12345'})
+      expect(result).toBe(1)
     })
 
-    it('bad id should resolve null', () => {
-      return db.fetchItem({id: "12345"})
-      .then(item => {
-        expect(item).toBeNull()
-      })
+    it('bad id should resolve null', async () => {
+      let result = await db.fetchItem({id: '12345'})
+      expect(result).toBeNull()
     })
   })
 
-  describe('pushListItem', () => {
-    it('push a list item', () => {
-      return db.pushListItem({id: "789", listID: 'food', content: "one"})
-      .then(item => {
-        expect(item.id).toBe('789')
-        expect(item.listID).toBe('food')
-        expect(item.content).toBe('one')
+  describe('addListItem', () => {
+    afterAll(() => db.deleteItem({id: 'food:789'}))
+
+    it('add a list item', async () => {
+      let item = await db.addListItem({
+        id: 'food:789', 
+        listID: 'food', 
+        content: 'one'
+      })
+
+      expect(item.id).toBe('food:789')
+      expect(item.listID).toBe('food')
+      expect(item.content).toBe('one')
+    })
+
+    it('missing id, bad id, or missing listID should fail', async () => {
+      await db.addListItem({id: 'food:123', content: 'one'})
+      .catch(err => {
+        expect(err.message.startsWith('_REDIS_ADD_LIST_')).toBeTruthy()
+      })
+
+      await db.addListItem({listID: 'food', content: 'one'})
+      .catch(err => {
+        expect(err.message.startsWith('_REDIS_ADD_LIST_')).toBeTruthy()
+      })
+
+      await db.addListItem({id: '1234', listID: 'food', content: 'one'})
+      .catch(err => {
+        expect(err.message.startsWith('_REDIS_ADD_LIST_')).toBeTruthy()
+      })
+    })
+  })
+  
+  describe('updateListItem', () => {
+    afterAll(() => db.deleteItem({id: 'food:789'}))
+    it('update a list item', async () => {
+      await db.addListItem({id: 'food:789', listID: 'food', content: 'two'})
+      let item = await db.updateListItem({
+        id: 'food:789', 
+        listID: 'food', 
+        content: 'one'
+      })
+
+      expect(item.id).toBe('food:789')
+      expect(item.listID).toBe('food')
+      expect(item.content).toBe('one')
+    })
+
+    it('missing list item should fail', async () => {
+      await db.updateListItem({id: 'snack:1234', listID: 'snack', content: 'one'})
+      .catch(err => {
+        console.log(err)
+        expect(err.message.startsWith('_REDIS_update_LIST_')).toBeTruthy()
       })
     })
 
-    it('push a list item', () => {
-      return db.pushListItem({id: "800", listID: 'food', content: "two"})
-      .then(item => {
-        expect(item.id).toBe('800')
-        expect(item.listID).toBe('food')
-        expect(item.content).toBe('two')
+    it('missing id, bad id, or missing listID should fail', async () => {
+      await db.updateListItem({id: 'food:123', content: 'one'})
+      .catch(err => {
+        expect(err.message.startsWith('_REDIS_update_LIST_')).toBeTruthy()
+      })
+
+      await db.updateListItem({listID: 'food', content: 'one'})
+      .catch(err => {
+        expect(err.message.startsWith('_REDIS_update_LIST_')).toBeTruthy()
+      })
+
+      await db.updateListItem({id: '1234', listID: 'food', content: 'one'})
+      .catch(err => {
+        expect(err.message.startsWith('_REDIS_update_LIST_')).toBeTruthy()
       })
     })
-
-    it('push a list item', () => {
-      return db.pushListItem({id: "801", listID: 'food', content: "three"})
-      .then(item => {
-        expect(item.id).toBe('801')
-        expect(item.listID).toBe('food')
-        expect(item.content).toBe('three')
-      })
-    })
-
   })
   
   describe('fetchAllListItems', () => {
-     it('should have three items', () => {
-       return db.fetchAllListItems({listID: 'food'})
+     it('should have three items', async () => {
+       let result = await mockTask.getTasks()
+       return db.fetchAllListItems({listID: 'task:' + result.user.email})
        .then(list => {
          expect(list.length).toBe(3)
-         expect(list[0].id).toBe('801')
-         expect(list[1].id).toBe('800')
-         expect(list[2].id).toBe('789')
+         let ids = new Set(result.tasks.map(t => t.id))
+         expect(ids.has(list[0].id)).toBeTruthy()
+         expect(ids.has(list[1].id)).toBeTruthy()
+         expect(ids.has(list[2].id)).toBeTruthy()
        })
      })
   })
 
   describe('deleteList', () => {
-     it('should delete the list', () => {
-       return db.deleteList({listID: 'food'})
+     it('should delete the list', async () => {
+       let result = await mockTask.getTasks()
+       return db.deleteList({listID: 'task:' + result.user.email}) 
        .then(count => {
-         expect(count).toBe(1)
+         console.log(count)
+         expect(count).toBe(3)
        })
      })
   })

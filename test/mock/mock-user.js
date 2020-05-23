@@ -4,6 +4,7 @@ const faker = require('faker')
 
 // internal deps
 const User = require('../../src/model/user.js')
+const mockUtil = require('./mock-util.js')
 
 // module state
 let cache = []
@@ -20,16 +21,8 @@ const getInput = () => ({
 const getUser = async () => {
   let input = getInput()
   let user = await User.createUser(input)
-  cache.push(user)
+  mockUtil.cacheItem(user)
   return {user, input}
 }
 
-const cleanup = async () => {
-  debug('cleanup')
-  await Promise.all(cache.map(async (user) => {
-    await user.delete()
-  }))
-  cache = []
-}
-
-module.exports = {getInput, getUser, cleanup}
+module.exports = {getInput, getUser}

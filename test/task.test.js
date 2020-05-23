@@ -7,12 +7,13 @@ require('dotenv').config(`${__dirname}/../.env`)
 const db = require('../src/lib/db.js')
 const Task = require('../src/model/task.js')
 const mockTask = require('./mock/mock-task.js')
+const mockUtil = require('./mock/mock-util.js')
 
 // test suite
 describe('task model', () => {
   beforeAll(db.initClient)
   afterAll(async () => {
-    await mockTask.cleanup()
+    await mockUtil.cleanup()
     await db.quitClient()
   })
 

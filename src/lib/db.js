@@ -74,6 +74,17 @@ const handleClientEvents = (client) => {
   })
 }
 
+const objectToArray = (data) => {
+  let keys = Object.keys(data)
+  let values = Object.values(data)
+  let result = []
+  keys.forEach((key, i) => {
+    result.push(key)
+    result.push(values[i])
+  })
+  return result
+}
+
 // resolves the client
 const initClient = async () => {
   debug('initClient')
@@ -93,64 +104,109 @@ const quitClient = async () => {
 
 // resolves item fetched
 const writeItem = async (item) => {
-  debug('writeItem')
+  debug('writeItem', item.id)
   let {id} = item
   if(!id) throw new Error(errorMessage.redisIDWriteError())
-  let keys = Object.keys(item)
-  let values = Object.values(item)
-  let hmsetValues = []
-  keys.forEach((key, i) => {
-    hmsetValues.push(key)
-    hmsetValues.push(values[i])
-  })
-  await doit('hmset', id, ...hmsetValues)
+  await doit('hmset', id, objectToArray(item))
   return item
 }
 
 // resolves item fetched
 const fetchItem = async (item) => {
-  debug('fetchItemByID')
+  debug('fetchItem')
   if(!item.id) throw new Error(errorMessage.redisIDReadError())
   return await doit('hgetall', item.id)
 }
 
+const updateItem = async(item) => {
+  debug('updateItem')
+  // TODO: make update error
+  if(!item.id) throw new Error(errorMessage.redisIDReadError()) 
+  let exists = await doit('exists', item.id)
+  if (exists !== 1) 
+    throw new Error('_REDIS_UPDATE_ERROR_ item does not exist')
+  return await writeItem(item)
+}
+
 // resolves number deleted
 const deleteItem = async (item) => {
-  debug('deleteItemByID')
+  debug('deleteItem', item.id)
   if(!item.id)
     throw new Error(errorMessage.redisIDDeleteError())
   return await doit('del', item.id)
 }
 
-const deleteList = async (item) => deleteItem({id: item.listID})
+//NOTE: "List" in this module is an Unordered list using hashs
+// not the redis List data type
 
-// resolves item that was pushed
-const pushListItem = async (item) => {
-  debug('pushListItem')
+// resolves the list Item
+const addListItem = async (item) => {
+  debug('addListItem')
   if(!item.listID) 
-    throw new Error(errorMessage.redisMethodCallFail('lpush'))
-  let json = JSON.stringify(item)
-  await doit('lpush', item.listID, json)
-  return item
+    throw new Error('_REDIS_ADD_LIST_ITEM_ERROR_ listID required')
+  if(!item.id) 
+    throw new Error('_REDIS_ADD_LIST_ITEM_ERROR_ id required')
+  if(!item.id.startsWith(item.listID)) 
+    throw new Error('_REDIS_ADD_LIST_ITEM_ERROR_ id must start with listID')
+  return writeItem(item)
 }
 
-// resolves length of list
+// resolves al keys in a given list
+const getListKeys = async (item) => {
+  debug('getListKeys')
+  if(!item.listID) 
+    throw new Error('_REDIS_GET_LIST_KEYS_ERROR_ listID required')
+  return await doit('keys', item.listID + '*')
+}
+
+const updateListItem = async (item) => {
+  debug('updateListItem')
+  if(!item.listID) 
+    throw new Error('_REDIS_update_LIST_ITEM_ERROR_ listID required')
+  if(!item.id) 
+    throw new Error('_REDIS_update_LIST_ITEM_ERROR_ id required')
+  if(!item.id.startsWith(item.listID)) 
+    throw new Error('_REDIS_update_LIST_ITEM_ERROR_ id must start with listID')
+  return updateItem(item)
+}
+
+// resolves number of items deleted
+const deleteList = async (item) => {
+  debug('deleteList')
+  if(!item.listID) 
+    throw new Error('_REDIS_DELETE_LIST_ERROR_ listID required')
+  let keys = await getListKeys(item)
+  return await doit('del', keys)
+}
+
+// resloves all the list items
 const fetchAllListItems = async (item) => {
-  let {llen, lrange} = state.methods
-  let length = await doit('llen', item.listID)
-  let list = await doit('lrange', item.listID, 0, length + 1)
-  return list.map(JSON.parse)
+  debug('fetchAllListItems')
+  if(!item.listID) 
+    throw new Error('_REDIS_FETCH_LIST_ITEMS_ERROR listID required')
+  let keys = await getListKeys(item)
+  let list = await Promise.all(keys.map(async (key) => {
+    return await fetchItem({id: key})
+  }))
+  // TODO: sort?
+  return list
 }
 
 // interface
 module.exports = {
+  state,
   initClient, // cant protect client if it dont exist :)
   quitClient: protectInterfaceMethod(quitClient),
+  doit: protectInterfaceMethod(doit),
+  // Items
   writeItem: protectInterfaceMethod(writeItem),
   fetchItem: protectInterfaceMethod(fetchItem), 
+  updateItem: protectInterfaceMethod(updateItem),
   deleteItem: protectInterfaceMethod(deleteItem),
+  // List Items
+  addListItem: protectInterfaceMethod(addListItem),
+  getListKeys: protectInterfaceMethod(getListKeys),
+  updateListItem: protectInterfaceMethod(updateListItem),
   deleteList: protectInterfaceMethod(deleteList),
-  pushListItem: protectInterfaceMethod(pushListItem),
   fetchAllListItems: protectInterfaceMethod(fetchAllListItems),
-  state,
 }

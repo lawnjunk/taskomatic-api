@@ -30,8 +30,8 @@ const hasRequiredInputData = async (props) => {
 class  Task {
   constructor(props){
     debug('constructor')
-    this.id = uuid()
-    this.listID = 'list:' + props.user.email
+    this.id = 'task:' + props.user.email + ':' + uuid()
+    this.listID = 'task:' + props.user.email
     this.userID = props.user.id
     this.description = props.description
     this.completed = props.completed
@@ -55,9 +55,12 @@ class  Task {
       createError(400, 'invalid date'))
   }
 
+  async delete(){
+    await db.deleteItem({id: this.id})
+  }
+  
   async deleteList(){
-    debug('deleteList', this.listID)
-    await db.deleteItem({id: this.listID})
+    await db.deleteList({id: this.listID})
   }
 }
 
@@ -65,11 +68,15 @@ Task.createTask = async (props) => {
   debug('createTask')
   await hasRequiredInputData(props)
   let task = new Task(props)
-  return await db.pushListItem(task)
+  return await db.addListItem(task)
 }
 
-Task.fetchListByID = async (id) => {
-  return db.fetchAllListItems({listID: id})
+Task.fetchListByUserEmail = async (email) => {
+  return db.fetchAllListItems({listID: 'task:' + email})
+}
+
+Task.dleteListByUserEmail = async (email) => {
+  return await db.deleteList({listID: 'task:' + email})
 }
 
 module.exports = Task

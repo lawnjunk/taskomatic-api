@@ -23,5 +23,4 @@ taskRouter.post('/task', bearer, jsonParser, signing, async (req, res) => {
   res.signJSON(task)
 })
 
-
 module.exports = taskRouter

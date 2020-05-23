@@ -6,38 +6,41 @@ const faker = require('faker')
 // internal deps
 const Task = require('../../src/model/task.js')
 const mockUser = require('./mock-user.js')
-
-// module state
-let cache = []
+const mockUtil = require('./mock-util.js')
 
 // interface
-const getInput = async () => {
-  const {user} = await mockUser.getUser()
-  return {
-    user,
+const simpleInput = () => ({
     completed: false,
     description: faker.lorem.sentence(),
-  }
+})
+
+const getInput = async () => {
+  let {user} = await mockUser.getUser()
+  return Object.assign({}, {user}, simpleInput())
 }
 
 const getTask = async () => {
   let input = await getInput()
   let task = await Task.createTask(input)
-  cache.push(task)
+  mockUtil.cacheItem(task)
   return {input, task}
 }
 
-const cleanup = async () => {
-  debug('cleanup')
-  await mockUser.cleanup()
-  let deletedLists = {}
-  await Promise.all(cache.map(async (task) => {
-    if(!deletedLists[task.listID]){
-      await task.deleteList()
-      deletedLists[task.listID] = true
-    }
-  })).catch(console.error)
-  cache = []
+const getTasks = async (count=3) => {
+  if(count < 1)
+    throw new Error('_ERROR_ count must be positive int')
+  let {user} = await mockUser.getUser()
+  let inputs = []
+  let tasks = []
+  while(count>0){
+    let input = Object.assign({}, {user}, simpleInput())
+    let task = await Task.createTask(input)
+    inputs.push(input)
+    tasks.push(task)
+    mockUtil.cacheItem(task)
+    count--
+  }
+  return {user, tasks, inputs}
 }
 
-module.exports = {getInput, getTask, cleanup}
+module.exports = {getInput, getTask, getTasks}

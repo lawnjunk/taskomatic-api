@@ -5,12 +5,13 @@ require('dotenv').config(`${__dirname}/../.env`)
 const db = require('../src/lib/db.js')
 const User = require('../src/model/user.js')
 const mockUser = require('./mock/mock-user.js')
+const mockUtil = require('./mock/mock-util.js')
 
 describe('User Model', () => {
   beforeAll(db.initClient)
   //afterAll(db.deleteItem({id: 'user:example@slugbyte.com'})
   afterAll(async () => {
-    await mockUser.cleanup()
+    await mockUtil.cleanup()
     await db.quitClient()
   })
 
