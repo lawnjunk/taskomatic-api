@@ -106,7 +106,11 @@ describe('DB', () => {
   })
   
   describe('updateListItem', () => {
-    afterAll(() => db.deleteItem({id: 'food:789'}))
+    afterAll(async () => {
+      await db.deleteItem({id: 'food:789'})
+      await db.deleteItem({id: 'snack:1234'})
+  })
+
     it('update a list item', async () => {
       await db.addListItem({id: 'food:789', listID: 'food', content: 'two'})
       let item = await db.updateListItem({
@@ -122,9 +126,11 @@ describe('DB', () => {
 
     it('missing list item should fail', async () => {
       await db.updateListItem({id: 'snack:1234', listID: 'snack', content: 'one'})
+      .then(() => {
+        throw new Error('failed')
+      })
       .catch(err => {
-        console.log(err)
-        expect(err.message.startsWith('_REDIS_update_LIST_')).toBeTruthy()
+        expect(err.message.startsWith('_REDIS_UPDATE_ERROR')).toBeTruthy()
       })
     })
 
