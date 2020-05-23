@@ -6,17 +6,20 @@ require('dotenv').config(`${__dirname}/../.env`)
 // internal deps
 const db = require('../src/lib/db.js')
 const Task = require('../src/model/task.js')
-const User = require('../src/model/user.js')
+const mockTask = require('./mock/mock-task.js')
 
 // test suite
 describe('task model', () => {
   beforeAll(db.initClient)
-  afterAll(await () => {
-    await db.quit()
+  afterAll(async () => {
+    await db.quitClient()
   })
 
   describe('createTask', () => {
-    beforeAll(async () => {
+    it('should create a task', async () => {
+      let {task, input} = await mockTask.getTask()
+      console.log(task)
+      expect(task.description).toEqual(input.description)
     })
   })
 })

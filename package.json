@@ -26,6 +26,7 @@
     "valid.js": "^1.2.5"
   },
   "devDependencies": {
+    "faker": "^4.1.0",
     "jest": "^26.0.1",
     "superagent": "^5.2.2"
   }
