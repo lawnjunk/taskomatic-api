@@ -22,6 +22,7 @@ module.exports = (req, res, next) => {
   User.findByToken(token)
   .then(user => {
     req.user = user
+    req.authToken = token
     next()
   })
   .catch(next)

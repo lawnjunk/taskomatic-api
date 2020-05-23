@@ -4,38 +4,36 @@ require('dotenv').config(`${__dirname}/../.env`)
 // internal deps
 const db = require('../src/lib/db.js')
 const User = require('../src/model/user.js')
-
-let mock = {
-  firstName: 'slug', 
-  lastName: 'byte', 
-  username: 'slugbyte',
-  email: 'example@slugbyte.com',
-  id: 'user:example@slugbyte.com',
-  password: 'checkthestickynoteonmydesk',
-}
+const mockUser = require('./mock/mock-user.js')
+const mockUtil = require('./mock/mock-util.js')
 
 describe('User Model', () => {
   beforeAll(db.initClient)
   //afterAll(db.deleteItem({id: 'user:example@slugbyte.com'})
-  afterAll(db.quitClient)
+  afterAll(async () => {
+    await mockUtil.cleanup()
+    await db.quitClient()
+  })
 
   it('should create a user', async () => {
-    let user = await User.createUser(Object.assign({}, mock, {id: null}))
+    let {user, input} = await mockUser.getUser()
+    expect(user.id).toBe('user:' + input.email)
+  })
+
+  it('should find a user', async () => {
+    const {user: mock} = await mockUser.getUser()
+    let user = await User.findByID(mock.id)
+    expect(user instanceof User).toBeTruthy()
     expect(user.id).toBe(mock.id)
   })
 
-  it('shold find a user', async () => {
-    let user = await User.findByID(mock.id)
-    expect(user instanceof User).toBeTruthy()
-  })
-
   it('should create and validate token', async () => {
-    let user = await User.findByID(mock.id)
+    const {user} = await mockUser.getUser()
     let token = await user.createAuthToken()
     expect(token.length > 100).toBeTruthy()
 
     let validUser = await user.verifyAuthToken(token)
-    expect(validUser.id).toBe(mock.id)
+    expect(validUser.id).toBe(user.id)
 
     await user.verifyAuthToken("bad token")
     .catch(err => {
@@ -44,9 +42,9 @@ describe('User Model', () => {
   })
 
   it('should validate the correct password', async () => {
-    let user = await User.findByID(mock.id)
-    let validUser = await user.verifyPassword(mock.password)
-    expect(validUser.id).toBe(mock.id)
+    let {user, input} = await mockUser.getUser()
+    let validUser = await user.verifyPassword(input.password)
+    expect(validUser.id).toBe(user.id)
 
     await user.verifyPassword('bad password')
     .catch(err => {
