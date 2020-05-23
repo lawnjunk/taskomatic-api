@@ -23,4 +23,7 @@ describe('task model', () => {
       expect(task.description).toEqual(input.description)
     })
   })
+
+  describe('getTasksByUserEmail', () => {
+  })
 })

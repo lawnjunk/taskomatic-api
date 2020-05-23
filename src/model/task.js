@@ -55,12 +55,20 @@ class  Task {
       createError(400, 'invalid date'))
   }
 
-  async delete(){
-    await db.deleteItem({id: this.id})
+  async update(props={}){
+    debug('update')
+    if (props.description)
+      this.description = props.description
+    if(isBool(props.completed))
+      this.completed = props.completed
+    this.validate()
+    await db.updateListItem(this)
+    return this
   }
-  
-  async deleteList(){
-    await db.deleteList({id: this.listID})
+
+  async delete(){
+    debug('delete')
+    await db.deleteItem({id: this.id})
   }
 }
 
@@ -71,11 +79,18 @@ Task.createTask = async (props) => {
   return await db.addListItem(task)
 }
 
-Task.fetchListByUserEmail = async (email) => {
+Task.fetchTaskById = async (id) => {
+  debug('fetchById')
+  return db.fetchItem({id: id})
+}
+
+Task.fetchTaskListByUserEmail = async (email) => {
+  debug('fetchTaskListByUserEmail')
   return db.fetchAllListItems({listID: 'task:' + email})
 }
 
-Task.dleteListByUserEmail = async (email) => {
+Task.deleteTaskListByUserEmail = async (email) => {
+  debug('deleteTaskListByUserEmail')
   return await db.deleteList({listID: 'task:' + email})
 }
 
