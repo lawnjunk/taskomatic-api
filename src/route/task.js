@@ -18,7 +18,15 @@ const taskRouter = new Router()
 // interface
 taskRouter.post('/task', bearer, jsonParser, signing, async (req, res) => {
   const {user, body} = req
-  body.user = user
+  if(req.body.email){
+    let user = await User.fetchByEmail(req.body.email)
+    if(user == null)
+      throw createError(401, 'invalid email')
+    req.body.user = user
+  } else {
+    req.body.user = req.user
+  }
+
   let task = await Task.createTask(body)
   res.signJSON(task)
 })

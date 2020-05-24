@@ -109,6 +109,9 @@ User.findByID = async (id) => {
   return new User(data)
 }
 
+User.findByEmail = (email) => 
+  User.findByID('user:' + email)
+
 User.findByToken = async (token) => {
   let {id} = await jwtVerify(token, process.env.APP_SECRET)
   let user = User.findByID(id)

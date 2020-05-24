@@ -63,6 +63,7 @@
 * A user is able to submit a task through an endpoint.
   * **DONE**
 * The backend will consume the task (a random timer delay).
+  * **DONE**
 * Through another endpoint, the user can check the status of the task.
   * **DONE**
 ### CHALLENGES

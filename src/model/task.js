@@ -22,8 +22,6 @@ const hasRequiredInputData = async (props) => {
     createError(400, 'invalid user'))
   assert(isString(props.description), 
     createError(400, 'invalid descrption'))
-  assert(isBool(props.completed), 
-    createError(400, 'invalid user'))
 }
 
 // interface
@@ -35,14 +33,19 @@ class  Task {
     this.userID = props.userID || props.user.id
     this.description = props.description
     this.timestamp = props.timestamp ? new Date(props.timestamp): new Date()
+    this.draft = true
 
     switch(typeof props.completed){
       case 'boolean':
-        this.completed = props.completed
+        this.completed = props.completed 
         break
       case 'string':
         this.completed = props.completed === 'true'
+        break
+      default:
+        this.completed = false
     }
+
     this.validate()
   }
 
@@ -70,6 +73,8 @@ class  Task {
       this.completed = props.completed
     this.validate()
     await db.updateListItem(this)
+    if(this.draft == false)
+      await db.doit('persist', [this.id]) // MAGIC NUM is 24hrs in seconds
     return this
   }
 
@@ -84,6 +89,7 @@ Task.createTask = async (props) => {
   await hasRequiredInputData(props)
   let task = new Task(props)
   await db.addListItem(task)
+  await db.doit('expire', [task.id, 86400]) // MAGIC NUM is 24hrs in seconds
   return task
 }
 
