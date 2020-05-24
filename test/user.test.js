@@ -9,7 +9,6 @@ const mockUtil = require('./mock/mock-util.js')
 
 describe('User Model', () => {
   beforeAll(db.initClient)
-  //afterAll(db.deleteItem({id: 'user:example@slugbyte.com'})
   afterAll(async () => {
     await mockUtil.cleanup()
     await db.quitClient()

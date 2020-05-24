@@ -73,7 +73,7 @@ describe('DB', () => {
   })
 
   describe('addListItem', () => {
-    afterAll(() => db.deleteItem({id: 'food:789'}))
+    afterAll(mockUtil.cleanup)
 
     it('add a list item', async () => {
       let item = await db.addListItem({

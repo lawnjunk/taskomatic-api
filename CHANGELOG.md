@@ -56,11 +56,10 @@
   * wrote integration tests for the task routes
 
 ## Todo Roadmap
-* 0.1.7 -- randtask routes
-* 0.1.8 -- error routes
-* 0.1.9 -- refactor
-* 0.1.10 -- dockerize
-* 0.1.11 -- continuous deployment
+* 0.1.7 -- mailer
+* 0.1.? -- refactor
+* 0.1.? -- dockerize
+* 0.1.? -- continuous deployment
 * 1.0.0 -- GET JOB
 
 ## GOALS
