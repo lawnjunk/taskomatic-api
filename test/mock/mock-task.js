@@ -22,7 +22,6 @@ const getInput = async () => {
 const getTask = async () => {
   let input = await getInput()
   let task = await Task.createTask(input)
-  mockUtil.cacheItem(task)
   return {input, task}
 }
 
@@ -37,7 +36,6 @@ const getTasks = async (count=3) => {
     let task = await Task.createTask(input)
     inputs.push(input)
     tasks.push(task)
-    mockUtil.cacheItem(task)
     count--
   }
   return {user, tasks, inputs}

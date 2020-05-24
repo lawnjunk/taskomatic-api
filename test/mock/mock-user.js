@@ -7,8 +7,6 @@ const User = require('../../src/model/user.js')
 const mockUtil = require('./mock-util.js')
 
 // module state
-let cache = []
-
 // interface
 const getInput = () => ({
   username: faker.internet.userName() + faker.internet.userName(),
@@ -21,7 +19,6 @@ const getInput = () => ({
 const getUser = async () => {
   let input = getInput()
   let user = await User.createUser(input)
-  mockUtil.cacheItem(user)
   return {user, input}
 }
 

@@ -4,31 +4,22 @@ const debug = require('debug')('app:mock-util')
 
 const db = require('../../src/lib/db.js')
 
-// module state
-let cache = []
-
-// interface
-const cacheItem = (item) => {
-  if(process.env.VERBOSE)
-    debug('cacheItem', item.id)
-  cache.push(item)
-}
-
 const writeItem = async (item) => {
   if(process.env.VERBOSE)
     debug('writeItem')
   await db.writeItem(item)
-  cacheItem(item)
   return item
 }
 
 const cleanup = async () => {
   debug('cleanup')
-  await Promise.all(cache.map(async (item) => {
-    await db.deleteItem(item)
-  }))
-  cache = []
+  let result = await db.doit('flushall')
 }
 
-module.exports = {cacheItem, writeItem, cleanup}
+module.exports = {
+  writeItem, 
+  cleanup, 
+  init: db.initClient, 
+  quit: db.quitClient
+}
 

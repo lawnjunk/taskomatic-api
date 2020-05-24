@@ -3,30 +3,14 @@
 const debug = require('debug')('app:task')
 const uuid = require('uuid').v1
 const createError = require('http-errors')
-const valid = require('valid.js')
 const assert = require('assert')
 
 // internal deps
 const db = require('../lib/db.js')
 const User = require('./user.js')
+const {isString, isEmail, isDate, isBool, toBool} = require('../lib/util.js')
 
 // helper methods
-const {isString} = valid.string
-const {isEmail} = valid.util
-const {isDate} = valid.date 
-const isBool = (value) => typeof value === 'boolean'
-
-const toBool = (value) => {
-    switch(typeof value){
-      case 'boolean':
-        return value
-      case 'string':
-        return  value === 'true'
-      default:
-        return false
-    }
-}
-
 const hasRequiredInputData = async (props) => {
   debug('hasRequiredInputData')
   assert(props.user instanceof User, 

@@ -5,12 +5,14 @@ const debug = require('debug')('app:task-route')
 const {Router} = require('express')
 const createError = require('http-errors')
 const jsonParser = require('body-parser').json()
-const bearer = require('../middleware/bearer-auth.js')
-const signing = require('../middleware/signing-middleare.js')
 
 // internal deps
 const User = require('../model/user.js') 
 const Task = require('../model/task.js')
+const mailer = require('../lib/mailer.js')
+const bearer = require('../middleware/bearer-auth.js')
+const signing = require('../middleware/signing-middleare.js')
+const tomorrow = require('../lib/tomorrow.js')
 
 // module constants 
 const taskRouter = new Router()
@@ -29,6 +31,12 @@ taskRouter.post('/task', bearer, jsonParser, signing, async (req, res) => {
 
   let task = await Task.createTask(body)
   res.signJSON(task)
+  await mailer.notifyTaskCreate(user, task).catch(console.error) 
+  tomorrow.register(task.id, () => {
+    // TODO: find a way to stop this from taking up memory
+    // because user and task obj will persist in mem for 24hrs
+    mailer.notifyTaskExpire(user, task).catch(console.error) 
+  })
 })
 
 taskRouter.get('/task/:id', bearer, signing, async (req, res) => {
@@ -52,6 +60,10 @@ taskRouter.put('/task/:id', bearer, jsonParser, signing, async (req, res) => {
 
   let result = await task.update(req.body) 
   res.signJSON(result)
+  if (result.complted)
+    await mailer.notifyTaskComplete(user, result).catch(console.error) 
+  if (!result.draft)
+    tomorrow.clear(task.id)
 })
 
 taskRouter.delete('/task/:id', bearer , async (req, res) => {
