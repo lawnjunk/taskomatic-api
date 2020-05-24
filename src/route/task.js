@@ -30,8 +30,8 @@ taskRouter.post('/task', bearer, jsonParser, signing, async (req, res) => {
   }
 
   let task = await Task.createTask(body)
-  res.signJSON(task)
   await mailer.notifyTaskCreate(user, task).catch(console.error) 
+  res.signJSON(task)
   tomorrow.register(task.id, () => {
     // TODO: find a way to stop this from taking up memory
     // because user and task obj will persist in mem for 24hrs
@@ -59,11 +59,12 @@ taskRouter.put('/task/:id', bearer, jsonParser, signing, async (req, res) => {
   } 
 
   let result = await task.update(req.body) 
-  res.signJSON(result)
+  // TODO: respond to clinet before mail without hanging tests?
   if (result.complted)
     await mailer.notifyTaskComplete(user, result).catch(console.error) 
   if (!result.draft)
     tomorrow.clear(task.id)
+  res.signJSON(result)
 })
 
 taskRouter.delete('/task/:id', bearer , async (req, res) => {

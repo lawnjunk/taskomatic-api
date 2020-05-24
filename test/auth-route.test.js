@@ -9,6 +9,7 @@ const db = require('../src/lib/db.js')
 const hmac = require('../src/lib/hmac.js')
 const server = require('../src/lib/server.js')
 const User = require('../src/model/user.js')
+const mockUtil = require('./mock/mock-util.js')
 
 // module constants
 let apiURL = process.env.API_URL
@@ -24,11 +25,11 @@ let mock = {
 describe('/auth router', () => {
   beforeAll(server.start)
   afterAll(async () => {
-    await db.deleteItem({id: 'user:' + mock.email})
+    await mockUtil.cleanup()
     await server.stop()
   })
 
-  it('should create a user', async () => {
+  it.only('should create a user', async () => {
     let res = await request.post(apiURL + '/auth').send(mock)
 
     expect(res.status).toBe(200)

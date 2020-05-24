@@ -13,7 +13,8 @@ const createError = require('http-errors')
 // internal deps
 const db = require('../lib/db.js')
 const errorMessages = require('../lib/error-message.js')
-const {isEmail, isDefined, toBool}  = require('../lib/util.js')
+const {isEmail, isDefined, toBool, isBool}  = require('../lib/util.js')
+
 
 // helper methods
 const jwtSign = promisify(jwt.sign.bind(jwt))
@@ -54,17 +55,44 @@ class User {
 
   validate(){
     debug('validate')
+    // TODO: make more strict validation
+    assert(this.uuid, createError(400, 'invalid uuid'))
     assert(this.id.startsWith('user:'), createError(400, 'invalid id'))
     assert(this.username.length > 7, createError(400, 'invalid password'))
     assert(isEmail(this.email), createError(400, 'invalid email'))
     assert(this.passwordHash, createError(400, 'invalid passwordHash'))
     assert(this.firstName, createError(400, 'invlaid firstName'))
     assert(this.lastName, createError(400, 'invalid lastName'))
+    assert(this.lastName, createError(400, 'invalid lastName'))
+    assert(isBool(this.verified), createError(400, 'bad verified'))
   }
 
   toSafeJSON(){
     debug('toSafeJSON')
     return JSON.stringify(Object.assign({}, this, {passwordHash: undefined}))
+  }
+
+  async verifyEmail(){
+    debug('verifyEmail')
+    this.verified = true
+    this.validate()
+    return await db.writeItem(this)
+  }
+
+  async updatePassword(password){
+    debug('updatePassword')
+    this.passwordHash = await hashPassword(props.password)
+    this.validate()
+    return await db.writeItem(this)
+  }
+
+  async updateProfile(props){
+    debug('updateProfile')
+    this.firstName = props.firstName || this.firstName
+    this.lastName = props.lastName || this.lastName
+    this.username = props.username || this.username
+    this.validate()
+    return await db.writeItem(this)
   }
 
   async createAuthToken(){

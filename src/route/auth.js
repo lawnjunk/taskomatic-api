@@ -11,6 +11,7 @@ const hmac = require('../lib/hmac.js')
 const basic = require('../middleware/basic-auth.js')
 const signing = require('../middleware/signing-middleare.js')
 const mailer = require('../lib/mailer.js')
+const util = require('../lib/util.js')
 
 // route config 
 const router = new Router()
@@ -21,8 +22,9 @@ router.post('/auth', jsonParser, async (req, res, next) => {
   let token = await user.createAuthToken()
   let signature = await hmac.hashData({token}, token)
   res.set('X-Taskomatic-Signature', signature)
-  res.json({token})
+  // TODO: respond to client before sending email without tests hanging
   await mailer.verifyUserEmail(user).catch(console.error) 
+  res.json({token})
 })
 
 router.get('/auth', basic, async (req, res, next) => {
@@ -33,8 +35,12 @@ router.get('/auth', basic, async (req, res, next) => {
   res.json({token})
 })
 
-router.get('/auth/verify/:emailHash', async (req, res) => {
-  // TODO: handle verfiy email hash 
+router.get('/auth/verify/:email', async (req, res) => {
+  let email = util.base64Decode(req.params.email)
+  let user = await User.fetchByEmail(email)
+  await user.update({verified: true})
+  let backURL = req.header('Referer') || process.env.CLIENT_URL
+  res.redirect(backURL)
 })
 
 // interface
