@@ -5,6 +5,7 @@ require('dotenv').config(`${__dirname}/../.env`)
 const request = require('superagent')
 
 // internal deps
+const db = require('../src/lib/db.js')
 const server = require('../src/lib/server.js')
 const Task = require('../src/model/task.js')
 const mockTask = require('./mock/mock-task.js')
@@ -105,7 +106,7 @@ describe('task router', () => {
       expect(res.body.completed).toBeTruthy()
     })
 
-    it.only('should update a task to a new user and persist task', async () => {
+    it('should update a task to a new user and persist task', async () => {
       const altUser = await mockUser.getUser()
       let mock = await mockTask.getTask()
       let token = await mock.input.user.createAuthToken()
