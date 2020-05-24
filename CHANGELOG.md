@@ -54,9 +54,20 @@
   * tasks can now be re-assigned to a different user
   * added task routes for CRUD opperations 
   * wrote integration tests for the task routes
+* 0.1.7 -- mailer
+  * added a mailer module for sending the following emails
+    * verify new user email with accept link
+    * notify task creation / undraft link (will go to client app)
+    * notify of a task expiring
+    * notify of task completion 
+  * routes now use the mailer 
+  * created and unit tested tomorrow.js 
+    * register a callback with an ID and run it after 24 hours
+    * you can un-register a callback using the same ID
+    * used to trigger expire notifications
 
 ## Todo Roadmap
-* 0.1.7 -- mailer
+* 0.1.? -- verify user email route
 * 0.1.? -- refactor
 * 0.1.? -- dockerize
 * 0.1.? -- continuous deployment

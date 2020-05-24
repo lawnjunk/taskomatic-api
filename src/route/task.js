@@ -34,6 +34,7 @@ taskRouter.post('/task', bearer, jsonParser, signing, async (req, res) => {
   await mailer.notifyTaskCreate(user, task).catch(console.error) 
   tomorrow.register(task.id, () => {
     // TODO: find a way to stop this from taking up memory
+    // because user and task obj will persist in mem for 24hrs
     mailer.notifyTaskExpire(user, task).catch(console.error) 
   })
 })
