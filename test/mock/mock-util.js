@@ -16,5 +16,10 @@ const cleanup = async () => {
   let result = await db.doit('flushall')
 }
 
-module.exports = {writeItem, cleanup}
+module.exports = {
+  writeItem, 
+  cleanup, 
+  init: db.initClient, 
+  quit: db.quitClient
+}
 

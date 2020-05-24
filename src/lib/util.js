@@ -7,7 +7,8 @@ const {isEmail} = valid.util
 const {isDate} = valid.date 
 const isBool = (value) => typeof value === 'boolean'
 const isDefined = (value) => value != undefined && value != null
-
+const base64Encode = (text) => Buffer.from(text).toString('base64')
+const base64Decode = (text) => Buffer.from(text).toString('ascii')
 
 const toBool = (value) => {
     switch(typeof value){
@@ -20,13 +21,13 @@ const toBool = (value) => {
     }
 }
 
-
 module.exports = {
+  base64Encode,
+  base64Decode,
+  isDefined,
   isString, 
   isEmail,
-  isDefined,
   isDate,
   isBool,
   toBool,
-
 }

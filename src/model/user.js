@@ -42,7 +42,7 @@ class User {
   constructor(props){
     debug('constructor')
     this.uuid = props.uuid || uuid()
-    this.id = props.id || 'user:' + props.email 
+    this.id = props.id || 'user:' + props.email  
     this.email = props.email
     this.username = props.username
     this.lastName = props.lastName
