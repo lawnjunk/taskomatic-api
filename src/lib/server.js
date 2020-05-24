@@ -7,18 +7,22 @@ const morgan = require('morgan')
 const cors = require('cors')
 
 // internal deps 
-let errorMessage = require('./error-message.js')
-let router = require('../route')
 const db = require('./db.js')
+let router = require('../route')
+let errorMessage = require('./error-message.js')
+const errorMiddleware = require('../middleware/error-middleware.js')
+const fourOhFourMiddleware = require('../middleware/fourohfour-middleware.js')
 
 // module constants
 const app = express()
   .use(morgan('common'))
   .use(cors()) // TODO: setup CORS ORIGIN
   .use(router)
+  .use(fourOhFourMiddleware)
+  .use(errorMiddleware)
 
+// module state
 const state = {
-  app,
   isOn: false,
   httpServer: null,
 }

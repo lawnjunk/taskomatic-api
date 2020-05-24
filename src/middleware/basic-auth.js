@@ -34,5 +34,5 @@ module.exports = (req, res, next) => {
     req.user = user
     next()
   })
-  .catch(next)
+  .catch(err => next(createError(401, err.message)))
 } 
