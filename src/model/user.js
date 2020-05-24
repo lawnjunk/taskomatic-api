@@ -9,11 +9,11 @@ const bcrypt = require('bcrypt')
 const {promisify} = require('util')
 const jwt = require('jsonwebtoken')
 const createError = require('http-errors')
-const {isEmail}  = require('valid.js').util
 
 // internal deps
 const db = require('../lib/db.js')
 const errorMessages = require('../lib/error-message.js')
+const {isEmail, isDefined, toBool}  = require('../lib/util.js')
 
 // helper methods
 const jwtSign = promisify(jwt.sign.bind(jwt))
@@ -48,7 +48,7 @@ class User {
     this.lastName = props.lastName
     this.firstName = props.firstName
     this.passwordHash = props.passwordHash
-    this.verified = false
+    this.verified = isDefined(props.verified) ? toBool(props.verified): false
     this.validate()
   }
 

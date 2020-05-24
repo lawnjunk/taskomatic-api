@@ -6,6 +6,9 @@ const {isString} = valid.string
 const {isEmail} = valid.util
 const {isDate} = valid.date 
 const isBool = (value) => typeof value === 'boolean'
+const isDefined = (value) => value != undefined && value != null
+
+
 const toBool = (value) => {
     switch(typeof value){
       case 'boolean':
@@ -21,7 +24,9 @@ const toBool = (value) => {
 module.exports = {
   isString, 
   isEmail,
+  isDefined,
   isDate,
   isBool,
   toBool,
+
 }
