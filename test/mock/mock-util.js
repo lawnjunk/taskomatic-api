@@ -2,7 +2,6 @@
 // external mods
 const debug = require('debug')('app:mock-util')
 
-// TODO: add cache here
 const db = require('../../src/lib/db.js')
 
 // module state

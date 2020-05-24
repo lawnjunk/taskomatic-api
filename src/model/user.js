@@ -1,6 +1,7 @@
 'use strict'
 
 // external deps
+const uuid = require('uuid').v1
 const debug = require('debug')('app:user')
 const assert = require('assert')
 const crypto = require('crypto')
@@ -21,8 +22,8 @@ const jwtVerify = promisify(jwt.verify.bind(jwt))
 const hasRequiredInputData = async (props) => {
   debug('hasRequiredInputData')
   assert(props.username.length > 7, createError(400, 'invalid password'))
-  assert(props.password.length > 7, createError(400, 'invalid password'))
-  assert(isEmail(props.email), createError(400, 'invalid email'))
+  assert(props.password.length > 7, createError(400, 'invalid password')) 
+  assert(isEmail(props.email), createError(400, 'invalid email')) 
   assert(props.firstName, createError(400, 'invlaid firstName'))
   assert(props.lastName, createError(400, 'invalid lastName'))
 }
@@ -40,12 +41,14 @@ const comparePassword = async (password, user) => {
 class User {
   constructor(props){
     debug('constructor')
+    this.uuid = props.uuid || uuid()
     this.id = props.id || 'user:' + props.email 
     this.email = props.email
     this.username = props.username
     this.lastName = props.lastName
     this.firstName = props.firstName
     this.passwordHash = props.passwordHash
+    this.verified = false
     this.validate()
   }
 
