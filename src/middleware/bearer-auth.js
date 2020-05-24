@@ -19,6 +19,7 @@ module.exports = (req, res, next) => {
   if(!token)
     return next(createError(400, 'AUTH ERROR: not bearer auth'))
 
+  req.authToken = token
   User.findByToken(token)
   .then(user => {
     req.user = user

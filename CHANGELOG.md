@@ -61,16 +61,24 @@
 ### REQUIREMENTS
 * Build a task management API.
 * A user is able to submit a task through an endpoint.
+  * **DONE**
 * The backend will consume the task (a random timer delay).
 * Through another endpoint, the user can check the status of the task.
-* CHALLENGES
+  * **DONE**
+### CHALLENGES
 * ? A task is first created as draft with a 24h life time, it needs to be confirmed to be added to the task queue.
+  * TODO: add the life time and task queue feature
 * ? Use Redis for the previous challenge
+  * **DONE**
 * Assign a creator to each task. Have one endpoint to create a user (name/email), and one to get all the tasks for a given email
+  * **DONE** I did this with bearer auth instead of a route
 * Once a task has been consumed, notify its creator by email
+  * what do you mean by consumned? 
 * Create an authentication procedure between the client and the server using a HMAC signature
-  * TODO: make middleware that will add a HMAC header using the users Auth token, so they can decyrpt the token in the browser to verify
-* --Make the backend in Typescript--
+  * **DONE** I used the clients authToken as the secret key
+  * TODO: ENHANCE the secret key with a protected route?
+* Make the backend in Typescript--
+  * SKIPED
 ### DEV OPS
 * Deploy the application on AWS or GCP, or Azure
 * Make the app buildable as a container

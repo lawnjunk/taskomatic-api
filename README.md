@@ -128,24 +128,9 @@ The `task` endpoint is used to manage the CRUD opperations of the task model.
 #### Response
 
 ## RANDOM TASK
-The `/randtask` endpoint is used to manage the CRUD operations of the Task-Model, with the added side effect that it will automatically be marked as completed after a random interval within 10 seconds.
-### POST /randtask
-#### Requirements
-#### Response
 
-### GET /randtask
-#### Requirements
-#### Response
-
-### GET /randtask/:id
-#### Requirements
-#### Response
-
-### UPDATE /randtask/:id
-#### Requirements
-#### Response
-
-### DELETE /randtask/:id
+The `/task/random` endpoint is used to manage the CRUD operations of the Task-Model, with the added side effect that it will automatically be marked as completed after a random interval within 10 seconds.
+### POST /task/random
 #### Requirements
 #### Response
 
