@@ -4,6 +4,7 @@
 require('dotenv').config(`${__dirname}/../.env`)
 const debug = require('debug')
 const nodemailer = require('nodemailer')
+const cowsay = require('cowsay')
 
 // internal deps
 const {base64Encode} = require('./util.js')
@@ -70,7 +71,7 @@ const notifyTaskExpire = async (user, task) => {
   let subject =`Sorry ${user.firstName.toUpperCase()}, your task expired.`
   let html = `<h1>${subject}<h1>
     <h2>The following task has expired.</h2>
-    <p>${task.description}<p>
+    <pre>${cowsay.say({text: task.description})}</pre>
     <strong>Have a nice day.</strong>`
   return await mail.sendMail({
     from, 
@@ -85,7 +86,7 @@ const notifyTaskComplete = async (user, task) => {
   let subject =`Great Job ${user.firstName.toUpperCase()}!`
   let html = `<h1>${subject}<h1>
     <h2>You have complted the following task</h2>
-    <p>${task.description}<p>
+    <pre>${cowsay.think({text: task.description})}</pre>
     <strong>Keep up the great work!</strong>`
   return await mail.sendMail({
     from, 
