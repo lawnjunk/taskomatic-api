@@ -109,7 +109,7 @@ User.findByID = async (id) => {
   return new User(data)
 }
 
-User.findByEmail = (email) => 
+User.fetchByEmail = (email) => 
   User.findByID('user:' + email)
 
 User.findByToken = async (token) => {

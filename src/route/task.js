@@ -9,7 +9,7 @@ const bearer = require('../middleware/bearer-auth.js')
 const signing = require('../middleware/signing-middleare.js')
 
 // internal deps
-const User = require('../model/user.js') // TODO: remove if unused
+const User = require('../model/user.js') 
 const Task = require('../model/task.js')
 
 // module constants 
@@ -43,6 +43,13 @@ taskRouter.get('/task', bearer, signing, async (req, res) => {
 
 taskRouter.put('/task/:id', bearer, jsonParser, signing, async (req, res) => {
   let task = await Task.fetchTaskById(req.params.id)
+  if(req.body.email){
+    let user = await User.fetchByEmail(req.body.email)
+    if(user == null)
+      throw createError(401, 'invalid email')
+    req.body.user = user
+  } 
+
   let result = await task.update(req.body) 
   res.signJSON(result)
 })

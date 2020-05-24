@@ -16,6 +16,17 @@ const {isEmail} = valid.util
 const {isDate} = valid.date 
 const isBool = (value) => typeof value === 'boolean'
 
+const toBool = (value) => {
+    switch(typeof value){
+      case 'boolean':
+        return value
+      case 'string':
+        return  value === 'true'
+      default:
+        return false
+    }
+}
+
 const hasRequiredInputData = async (props) => {
   debug('hasRequiredInputData')
   assert(props.user instanceof User, 
@@ -28,24 +39,15 @@ const hasRequiredInputData = async (props) => {
 class  Task {
   constructor(props){
     debug('constructor')
-    this.id = props.id || 'task:' + props.user.email + ':' + uuid()
+    this.uuid = props.uuid || uuid()
+    // TODO: rename id key?
+    this.id = props.id || 'task:' + props.user.email + ':' + this.uuid
     this.listID = props.listID || 'task:' + props.user.email
     this.userID = props.userID || props.user.id
     this.description = props.description
     this.timestamp = props.timestamp ? new Date(props.timestamp): new Date()
-    this.draft = true
-
-    switch(typeof props.completed){
-      case 'boolean':
-        this.completed = props.completed 
-        break
-      case 'string':
-        this.completed = props.completed === 'true'
-        break
-      default:
-        this.completed = false
-    }
-
+    this.completed = props.completed != undefined ? toBool(props.completed) : true
+    this.draft = props.draft != undefined ? toBool(props.draft) : true
     this.validate()
   }
 
@@ -53,6 +55,8 @@ class  Task {
     debug('validate')
     assert(isString(this.id),
       createError(400, 'invalid id'))
+    assert(isString(this.uuid),
+      createError(400, 'invalid uuid'))
     assert(isString(this.listID),
       createError(400, 'invalid listID'))
     assert(isString(this.userID),
@@ -61,6 +65,8 @@ class  Task {
       createError(400, 'invalid description'))
     assert(isBool(this.completed),
       createError(400, 'invalid completed')) 
+    assert(isBool(this.draft),
+      createError(400, 'invalid draft')) 
     assert(isDate(this.timestamp),
       createError(400, 'invalid date'))
   }
@@ -69,10 +75,23 @@ class  Task {
     debug('update')
     if (props.description)
       this.description = props.description
-    if(isBool(props.completed))
-      this.completed = props.completed
-    this.validate()
-    await db.updateListItem(this)
+    if(props.completed != undefined)
+      this.completed = toBool(props.completed)
+    if(props.draft != undefined)
+      this.draft = toBool(props.draft)
+    if(props.user){
+      let {user} = props
+      await db.deleteItem(this)
+      this.id = `task:${user.email}:${this.uuid}`
+      this.listID = `task:${user.email}`
+      this.userID = `user:${user.email}`
+      this.validate()
+      await db.writeItem(this)
+    } else {
+      this.validate()
+      await db.updateListItem(this)
+    }
+
     if(this.draft == false)
       await db.doit('persist', [this.id]) // MAGIC NUM is 24hrs in seconds
     return this

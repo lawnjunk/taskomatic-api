@@ -67,12 +67,12 @@
 * Through another endpoint, the user can check the status of the task.
   * **DONE**
 ### CHALLENGES
-* ? A task is first created as draft with a 24h life time, it needs to be confirmed to be added to the task queue.
-  * TODO: add the life time and task queue feature
-* ? Use Redis for the previous challenge
+*  A task is first created as draft with a 24h life time, it needs to be confirmed to be added to the task queue.
+  * **DONE**
+*  Use Redis for the previous challenge
   * **DONE**
 * Assign a creator to each task. Have one endpoint to create a user (name/email), and one to get all the tasks for a given email
-  * **DONE** I did this with bearer auth instead of a route
+  * **DONE** I did this with bearer auth and a post body instead of a route
 * Once a task has been consumed, notify its creator by email
   * what do you mean by consumned? 
 * Create an authentication procedure between the client and the server using a HMAC signature

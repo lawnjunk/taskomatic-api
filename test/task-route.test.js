@@ -6,8 +6,9 @@ const request = require('superagent')
 
 // internal deps
 const server = require('../src/lib/server.js')
-const mockTask = require('./mock/mock-task.js')
 const Task = require('../src/model/task.js')
+const mockTask = require('./mock/mock-task.js')
+const mockUser = require('./mock/mock-user.js')
 const mockUtil = require('./mock/mock-util.js')
 
 // module contants
@@ -29,6 +30,20 @@ describe('task router', () => {
       expect(res.status).toBe(200)
       expect(res.body.id.startsWith('task')).toBe(true)
       expect(res.body.description).toBe(input.description)
+    })
+
+    it('should create a task for another user', async () => {
+      const altUser = await mockUser.getUser()
+      let input = await mockTask.getInput()
+      let token = await input.user.createAuthToken()
+      let res = await request.post(apiURL)
+        .set('Authorization', 'Bearer ' + token)
+        .send({description: input.description, email: altUser.user.email})
+
+      expect(res.status).toBe(200)
+      expect(res.body.id.startsWith('task')).toBe(true)
+      expect(res.body.description).toBe(input.description)
+      expect(res.body.listID).toBe('task:' + altUser.user.email)
     })
   })
 
@@ -88,6 +103,20 @@ describe('task router', () => {
       expect(res.status).toBe(200)
       expect(res.body.id).toBe(mock.task.id)
       expect(res.body.completed).toBeTruthy()
+    })
+
+    it('should update a task to a new user', async () => {
+      const altUser = await mockUser.getUser()
+      let mock = await mockTask.getTask()
+      let token = await mock.input.user.createAuthToken()
+      let res = await request.put(`${apiURL}/${mock.task.id}`)
+        .set('Authorization', 'Bearer ' + token)
+        .send({draft: false, email: altUser.user.email})
+
+      expect(res.status).toBe(200)
+      expect(res.body.id.split(':')[1]).toBe(altUser.user.email)
+      expect(res.body.draft).toBeFalsy()
+      expect(res.body.userID).toBeTruthy()
     })
   })
 
