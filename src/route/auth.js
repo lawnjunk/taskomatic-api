@@ -10,6 +10,7 @@ const User = require('../model/user.js')
 const hmac = require('../lib/hmac.js')
 const basic = require('../middleware/basic-auth.js')
 const signing = require('../middleware/signing-middleare.js')
+const mailer = require('../lib/mailer.js')
 
 // route config 
 const router = new Router()
@@ -21,6 +22,7 @@ router.post('/auth', jsonParser, async (req, res, next) => {
   let signature = await hmac.hashData({token}, token)
   res.set('X-Taskomatic-Signature', signature)
   res.json({token})
+  await mailer.verifyUserEmail(user).catch(console.error) 
 })
 
 router.get('/auth', basic, async (req, res, next) => {
@@ -29,6 +31,10 @@ router.get('/auth', basic, async (req, res, next) => {
   let signature = await hmac.hashData({token}, token)
   res.set('X-Taskomatic-Signature', signature)
   res.json({token})
+})
+
+router.get('/auth/verify/:emailHash', async (req, res) => {
+  // TODO: handle verfiy email hash 
 })
 
 // interface

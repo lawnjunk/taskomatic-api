@@ -48,6 +48,7 @@ const verifyUserEmail = async (user) => {
 }
 
 const notifyTaskCreate = async (user, task) => {
+  debug('notifyTaskCreate')
   let subject =`HEY ${user.firstName.toUpperCase()}, YOU HAVE A NEW TASK!`
   let base64TaskID = base64Encode(task.id)
   let html = `<h1>${subject}<h1>
@@ -65,6 +66,7 @@ const notifyTaskCreate = async (user, task) => {
 }
 
 const notifyTaskExpire = async (user, task) => {
+  debug('notifyTaskExpire')
   let subject =`Sorry ${user.firstName.toUpperCase()}, your task expired.`
   let html = `<h1>${subject}<h1>
     <h2>The following task has expired.</h2>
@@ -79,6 +81,7 @@ const notifyTaskExpire = async (user, task) => {
 }
 
 const notifyTaskComplete = async (user, task) => {
+  debug('notifyTaskComplete')
   let subject =`Great Job ${user.firstName.toUpperCase()}!`
   let html = `<h1>${subject}<h1>
     <h2>You have complted the following task</h2>
