@@ -47,9 +47,15 @@
   * all tests were refactored to use the new mocking modules
   * the task model has full crud
   * the task model has been unit tested
+* 0.1.6 -- task routes
+  * moved changelog in to own file
+  * added initial 404 and error middleware
+  * tasks default to expire after 24 hours
+  * tasks can now be re-assigned to a different user
+  * added task routes for CRUD opperations 
+  * wrote integration tests for the task routes
 
 ## Todo Roadmap
-* 0.1.6 -- task routes
 * 0.1.7 -- randtask routes
 * 0.1.8 -- error routes
 * 0.1.9 -- refactor

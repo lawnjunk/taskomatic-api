@@ -105,7 +105,7 @@ describe('task router', () => {
       expect(res.body.completed).toBeTruthy()
     })
 
-    it('should update a task to a new user', async () => {
+    it.only('should update a task to a new user and persist task', async () => {
       const altUser = await mockUser.getUser()
       let mock = await mockTask.getTask()
       let token = await mock.input.user.createAuthToken()
@@ -117,6 +117,10 @@ describe('task router', () => {
       expect(res.body.id.split(':')[1]).toBe(altUser.user.email)
       expect(res.body.draft).toBeFalsy()
       expect(res.body.userID).toBeTruthy()
+
+      let task = await Task.fetchTaskById(res.body.id)
+      let result = await db.doit('ttl', [task.id])
+      expect(result).toEqual(-1)
     })
   })
 

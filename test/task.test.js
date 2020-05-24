@@ -21,6 +21,8 @@ describe('task model', () => {
     it('should create a task', async () => {
       let {task, input} = await mockTask.getTask()
       expect(task.description).toEqual(input.description)
+      let result = await db.doit('ttl', [task.id])
+      expect(result).toBeGreaterThan(86000)
     })
   })
 
