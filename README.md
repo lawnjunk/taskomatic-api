@@ -85,14 +85,50 @@ Below is a list of the Task-Model properties, along with their descriptions.
 The Taskomatic API implements a REST interface. Each endpoint allows an http-client to create, read, update, and delete (CRUD) a model using HTTP the appropiate HTTP methods. 
 
 ## AUTH
-The `/auth` endpoint is used to manage the CRUD operations of User-Model, as well as generate authentication tokens.
+
+## Basic Authentication and Bearer Authorization
+When making requests to the REST API you will need to use the following two auth protocols, to successfully make requests.
+
+### Basic-Authentication
+Basic-auth is only used to login an existing user. It allows the API to trust you are who you say you are.  
+To implament Basic-Authentication you need to correctly set the Authorization header on your HTTP request. 
+
+ It should have the Value `"Basic"` + `" "` `"email"` + `":"` + `"password"`. 
+ 
+ It should be formated like the following example text.    
+`Authorization: Basic example@example.com:securepassword`
+
+### Bearer-Authorization
+Bearer-Auth is used to validate you authorized to make the request you want to. In other words It ensures you
+can't do something your not supposted to. After you successfuly create an account or login, the API will send you a token, that you will use to add bearer auth to your HTTP reqeusts. To implament Bearer-Authentication you need to correctly set the Authorization header on your HTTP request.  
+
+It should have the Value `"Bearer "` + `" "` +  `"token"`.  
+
+ It should be formated like the following example text.    
+`Authorization: Bearer ExampleEXAMPLEexampleEXAmpleExampleExampleexampleExAMPle`
+
+## User Model CRUD
+Because the User model stores sensitive security data, the CRUD opperations are broken into two endpoints, `/auth` and `
+
+`. 
+
+The `/auth` endpoint is used to manage the parts of the user model that have security conserts. It can do the folling
+  * `POST /auth` will create a new User
+  * `GET /auth` will login an existing user
+  * `PUT /auth` will update a users password
+  * `GET /auth/veify/:base64email` will verify that your email is correct
+
+The `/profile` endpoint is used to manage the parts of the user model that have no security consern.
+  * `GET /profile` will return a list of all the profiles (sanitized of sensitive information)
+  * `GET /profile/self` will return a users own profile  model
+  * `PUT /profile/self` will allow a user to update their name and username
 
 ### POST /auth
 Create a user and recieve an authentication token.
-#### Requirements
-* Make a HTTP POST request to `/auth` 
-* Set the HTTP header `Content-Type` to `application/json`
-* Attach JSON to the body of the request with the following data.
+* Requirements
+  * Make a HTTP POST request to `/auth` 
+  * Set the HTTP Header `Content-Type` to `application/json`
+  * Attach JSON to the body of the request with the following data.
 ``` json
 {
   "firstName": "Nancy",
@@ -102,9 +138,8 @@ Create a user and recieve an authentication token.
   "password": "mustbe8charslong"
 }
 ```
-
-#### Response
-The server will return a JSON object that contains an authentication token, that can be used to make task requests.
+* Response
+  * The server will return a JSON object that contains an authentication token, that can be used to make task requests.
 ``` json
 {
   "authToken": "ZXhhbXBsZSB0b2tlbiBleGFtcGxlIHRva2VuIGV4YW1wbGUgdG9rZW4K",
@@ -113,57 +148,61 @@ The server will return a JSON object that contains an authentication token, that
 
 ### GET /auth
 Retrieve an authentication token for an existing user. 
-#### Requirements
-* Make a HTTP GET requst to `/auth`
-* add an Authorization header with Basic Auth
-  * `Authorization: Basic [email]:[password]`
+* Requirements
+  * Make a HTTP GET requests to `/auth`
+  * Add a correctly formated Basic-Authorization http header
 
-#### Response
-The server will return a JSON object that contains an authentication token, that can be used to make task requests.
+* Response
+  * The server will return a JSON object that contains an authentication token, that can be used to make task requests.
 ``` json
 {
   "authToken": "ZXhhbXBsZSB0b2tlbiBleGFtcGxlIHRva2VuIGV4YW1wbGUgdG9rZW4K",
 }
 ```
 
-
 ### PUT /auth
 Update a user's password.
+* Requirements
+  * Make a HTTP PUT requst to `/auth`
+  * Add a correctly formated Bearer-Authorization http header
+  * Set the body of the request to a JSON object with your new password
+``` json
+{
+  "password": "mustbe8charslong"
+}
+```
+* Response
+  * A status code of 200
 
-#### Requirements
-* Make a HTTP PUT requst to `/auth`
-* add an Authorization header with Basic Auth
-  * `Authorization: Bearer [token]
-
-#### Response
-
-### DELETE /auth
-Delete a user and all of their content.
-#### Requirements
-#### Response
-
+### GET /profile
+Get a list of all the profiles 
+* Requirements
+  * Make a HTTP GET requst to `/profile`
+  * Add a correctly formated Bearer-Authorization http header
+* Response
+  * an Array of user models (the passwordHash) will be remove
 
 ## TASK 
 The `task` endpoint is used to manage the CRUD opperations of the task model.
 ### POST /task
-#### Requirements
-#### Response
+* Requirements
+* Response
 
 ### GET /task
-#### Requirements
-#### Response
+* Requirements
+* Response
 
 ### GET /task/:id
-#### Requirements
-#### Response
+*  Requirements
+*  Response
 
 ### UPDATE /task/:id
-#### Requirements
-#### Response
+* Requirements
+* Response
 
 ### DELETE /task/:id
-#### Requirements
-#### Response
+* Requirements
+* Response
 
 ## RANDOM TASK
 
