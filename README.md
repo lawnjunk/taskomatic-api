@@ -125,10 +125,10 @@ The `/profile` endpoint is used to manage the parts of the user model that have 
 
 ### POST /auth
 Create a user and recieve an authentication token.
-#### Requirements
-* Make a HTTP POST request to `/auth` 
-* Set the HTTP Header `Content-Type` to `application/json`
-* Attach JSON to the body of the request with the following data.
+* Requirements
+  * Make a HTTP POST request to `/auth` 
+  * Set the HTTP Header `Content-Type` to `application/json`
+  * Attach JSON to the body of the request with the following data.
 ``` json
 {
   "firstName": "Nancy",
@@ -138,8 +138,8 @@ Create a user and recieve an authentication token.
   "password": "mustbe8charslong"
 }
 ```
-#### Response
-The server will return a JSON object that contains an authentication token, that can be used to make task requests.
+* Response
+  * The server will return a JSON object that contains an authentication token, that can be used to make task requests.
 ``` json
 {
   "authToken": "ZXhhbXBsZSB0b2tlbiBleGFtcGxlIHRva2VuIGV4YW1wbGUgdG9rZW4K",
@@ -148,12 +148,12 @@ The server will return a JSON object that contains an authentication token, that
 
 ### GET /auth
 Retrieve an authentication token for an existing user. 
-#### Requirements
-* Make a HTTP GET requests to `/auth`
-* Add a correctly formated Basic-Authorization http header
+* Requirements
+  * Make a HTTP GET requests to `/auth`
+  * Add a correctly formated Basic-Authorization http header
 
-#### Response
-The server will return a JSON object that contains an authentication token, that can be used to make task requests.
+* Response
+  * The server will return a JSON object that contains an authentication token, that can be used to make task requests.
 ``` json
 {
   "authToken": "ZXhhbXBsZSB0b2tlbiBleGFtcGxlIHRva2VuIGV4YW1wbGUgdG9rZW4K",
@@ -162,48 +162,47 @@ The server will return a JSON object that contains an authentication token, that
 
 ### PUT /auth
 Update a user's password.
-#### Requirements
-
-* Make a HTTP PUT requst to `/auth`
-* Add a correctly formated Bearer-Authorization http header
-* Set the body of the request to a JSON object with your new password
+* Requirements
+  * Make a HTTP PUT requst to `/auth`
+  * Add a correctly formated Bearer-Authorization http header
+  * Set the body of the request to a JSON object with your new password
 ``` json
 {
   "password": "mustbe8charslong"
 }
 ```
-#### Response
-* A status code of 200
+* Response
+  * A status code of 200
 
 ### GET /profile
 Get a list of all the profiles 
 * Requirements
-	* Make a HTTP GET requst to `/profile`
-	* Add a correctly formated Bearer-Authorization http header
+  * Make a HTTP GET requst to `/profile`
+  * Add a correctly formated Bearer-Authorization http header
 * Response
-	* an Array of user models (the passwordHash) will be remove
+  * an Array of user models (the passwordHash) will be remove
 
 ## TASK 
 The `task` endpoint is used to manage the CRUD opperations of the task model.
 ### POST /task
-#### Requirements
-#### Response
+* Requirements
+* Response
 
 ### GET /task
-#### Requirements
-#### Response
+* Requirements
+* Response
 
 ### GET /task/:id
-#### Requirements
-#### Response
+*  Requirements
+*  Response
 
 ### UPDATE /task/:id
-#### Requirements
-#### Response
+* Requirements
+* Response
 
 ### DELETE /task/:id
-#### Requirements
-#### Response
+* Requirements
+* Response
 
 ## RANDOM TASK
 
