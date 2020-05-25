@@ -8,6 +8,13 @@ A proof of concept task management API.
 Unless this application is protected with an HTTPS connection, the requests and responses will be subject to man in the middle attacks and snooping.
 In production the application should be deployed behind an HTTPS-Proxy server to prevent misuse.
 
+
+## ABOUT
+This project is split into two services. The main service is a REST API, that allows a client to create an account, and then manage tasks. The secondary service is an automated email notification service. These services use a redis chanel to implament a PUB/SUB architecture. The diagram below shows how they whole system works. 
+
+![](/asset/mailer.png)
+
+
 ## DEVELOPMENT SETUP
 ### Access the source
 Run the following commands.
@@ -288,5 +295,4 @@ The `/task/random` endpoint is used to manage the CRUD operations of the Task-Mo
   * The server will send you back the task along with all the properties that were computed by the server.
 
 # The Mail service
-![](/asset/mailer.png)
 
