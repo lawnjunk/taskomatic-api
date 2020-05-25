@@ -72,8 +72,11 @@
     * TODO: could use a redis channel to solve this problem
   * added update password and verify email routes
   * integration for new routes
+* 0.1.9 -- profile routes
+  * 
 
 ## Todo Roadmap
+* 0.1.10 -- mailer pub/sub with redis chanel
 * 0.1.? -- refactor
 * 0.1.? -- dockerize
 * 0.1.? -- continuous deployment
