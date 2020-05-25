@@ -22,7 +22,7 @@ describe('profile router', () => {
     it('should return a users profile', async () => {
       const {user} = await mockUser.getUser()
       const token = await user.createAuthToken()
-      const res = await request(apiURL + '/whoami')  
+      const res = await request(apiURL + '/self')  
         .set('Authorization', 'Bearer ' + token)
       
       expect(res.status).toBe(200)
@@ -31,7 +31,7 @@ describe('profile router', () => {
   })
 
   describe('PUT /profile/self', () => {
-    it.only('should update profile information', async () => {
+    it('should update profile information', async () => {
       let {user} = await mockUser.getUser()
       let token = await user.createAuthToken()
       let res = await request.put(apiURL + '/self')
