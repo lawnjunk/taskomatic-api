@@ -1,6 +1,7 @@
 'use strict'
 
 // external deps
+require('dotenv').config(`${__dirname}/../.env`)
 const debug = require('debug')
 
 // internal deps
