@@ -91,6 +91,9 @@ Below is a list of the Task-Model properties, along with their descriptions.
 ## API Interface 
 The Taskomatic API implements a REST interface. Each endpoint allows an http-client to create, read, update, and delete (CRUD) a model using HTTP the appropiate HTTP methods. 
 
+All server responses are signed using an HMAC hash, so that a client can validate that there was no tampering during transit. 
+The an authenticated client can use there seshion authorization token to hash, and compare the data recieved.
+
 ## AUTH
 
 ## Basic Authentication and Bearer Authorization
