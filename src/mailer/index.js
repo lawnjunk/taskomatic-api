@@ -17,7 +17,7 @@ const start = async () => {
   db = redis.createClient(process.env.REDIS_URI)
   db.on('message', (channel, message) => messageHandler(message))
   db.subscribe('mail_queue')
-  console.log('MAILER UP AND RUNNING')
+  debug('MAILER UP AND RUNNING')
 }
 
 const stop = async () => {
