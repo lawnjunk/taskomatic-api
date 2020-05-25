@@ -85,6 +85,30 @@ Below is a list of the Task-Model properties, along with their descriptions.
 The Taskomatic API implements a REST interface. Each endpoint allows an http-client to create, read, update, and delete (CRUD) a model using HTTP the appropiate HTTP methods. 
 
 ## AUTH
+
+
+## Basic Authentication and Bearer Authorization
+When making requests to the REST API you will need to use the following two auth protocols, to successfully make requests.
+
+### Basic-Authentication
+Basic-auth is only used to login an existing user. It allows the API to trust you are who you say you are.  
+To implament Basic-Authentication you need to correctly set the Authorization header on your HTTP request. 
+
+ It should have the Value `"Basic"` + `" "` `"email"` + `":"` + `"password"`. 
+ 
+ It should be formated like the following example text.    
+`Authorization: Basic example@example.com:securepassword`
+
+### Bearer-Authorization
+Bearer-Auth is used to validate you authorized to make the request you want to. In other words It ensures you
+can't do something your not supposted to. After you successfuly create an account or login, the API will send you a token, that you will use to add bearer auth to your HTTP reqeusts. To implament Bearer-Authentication you need to correctly set the Authorization header on your HTTP request.  
+
+It should have the Value `"Bearer "` + `" "` +  `"token"`.  
+
+ It should be formated like the following example text.    
+`Authorization: Bearer ExampleEXAMPLEexampleEXAmpleExampleExampleexampleExAMPle`
+
+
 The `/auth` endpoint is used to manage the CRUD operations of User-Model, as well as generate authentication tokens.
 
 ### POST /auth
