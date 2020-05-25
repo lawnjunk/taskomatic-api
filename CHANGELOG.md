@@ -65,12 +65,19 @@
     * register a callback with an ID and run it after 24 hours
     * you can un-register a callback using the same ID
     * used to trigger expire notifications
+* 0.1.8 -- verify user email route
+  * fixed mailer bug that made tests hang--> has downside
+    * mail is sent before api responds to requests
+    * response times are very slow now
+    * TODO: could use a redis channel to solve this problem
+  * added update password and verify email routes
+  * integration for new routes
 
 ## Todo Roadmap
-* 0.1.? -- verify user email route
 * 0.1.? -- refactor
 * 0.1.? -- dockerize
 * 0.1.? -- continuous deployment
+* 0.1.? -- mailer as microservice using redis pub/sub
 * 1.0.0 -- GET JOB
 
 ## GOALS
