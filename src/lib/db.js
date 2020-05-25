@@ -194,8 +194,14 @@ const fetchAllListItems = async (item) => {
   return list
 }
 
+const on = (msg, callback) => {
+  debug('on')
+  state.client.on(msg, callback)
+}
+
 // interface
 module.exports = {
+  on: protectInterfaceMethod(on),
   state,
   initClient, // cant protect client if it dont exist :)
   quitClient: protectInterfaceMethod(quitClient),

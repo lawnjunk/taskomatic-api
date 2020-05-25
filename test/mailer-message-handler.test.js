@@ -4,7 +4,7 @@
 const debug = require('debug')
 
 // internal deps
-const mailer = require('../src/lib/mailer.js')
+const mailHandler = require('../src/lib/mailer-message-handler.js')
 const mockUtil = require('./mock/mock-util.js')
 const mockUser = require('./mock/mock-user.js')
 const mockTask = require('./mock/mock-task.js')
@@ -19,28 +19,44 @@ describe('mailer', () => {
 
   it('verifyUserEmail', async () => {
     let {user} = await mockUser.getUser()
-    let result = await mailer.verifyUserEmail(user)
+    let message = JSON.stringify({
+      action: 'VERIFY_USER_EMAIL',
+      data: {user},
+    })
+    let result = await mailHandler(message)
     expect(result.response.includes('250 Accepted'))
   })
   
   it('notifyTaskCreate', async () => {
     let {task, input} = await mockTask.getTask()
     let {user} = input
-    let result = await mailer.notifyTaskCreate(user, task)
+    let message = JSON.stringify({
+      action: 'NOTIFY_TASK_CREATE', 
+      data: {user, task},
+    })
+    let result = await mailHandler(message)
     expect(result.response.includes('250 Accepted'))
   })
 
   it('notifyTaskExpire', async () => {
     let {task, input} = await mockTask.getTask()
     let {user} = input
-    let result = await mailer.notifyTaskExpire(user, task)
+    let message = JSON.stringify({
+      action: 'NOTIFY_TASK_EXPIRE',
+      data: {user, task},
+    })
+    let result = await mailHandler(message)
     expect(result.response.includes('250 Accepted'))
   })
 
   it('notifyTaskComplete', async () => {
     let {task, input} = await mockTask.getTask()
     let {user} = input
-    let result = await mailer.notifyTaskComplete(user, task)
+    let message = JSON.stringify({
+      action: 'NOTIFY_TASK_COMPLETE',   
+      data: {user, task}
+    })
+    let result = await mailHandler(message)
     expect(result.response.includes('250 Accepted'))
   })
 })

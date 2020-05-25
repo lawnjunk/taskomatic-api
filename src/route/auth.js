@@ -11,7 +11,7 @@ const hmac = require('../lib/hmac.js')
 const basic = require('../middleware/basic-auth.js')
 const bearer = require('../middleware/bearer-auth.js')
 const signing = require('../middleware/signing-middleare.js')
-const mailer = require('../lib/mailer.js')
+//const mailer = require('../lib/mailer.js')
 const util = require('../lib/util.js')
 
 // route config 
@@ -26,7 +26,7 @@ router.post('/auth', jsonParser, async (req, res) => {
   // TODO: respond to client before sending email without tests hanging
   // A GOOD WAY TODO THIS is to make a small mailer micoro service API :)
   // you could use a redis channel to do pub sub :) to mailer events
-  await mailer.verifyUserEmail(user).catch(console.error) 
+  //await mailer.verifyUserEmail(user).catch(console.error) 
   res.json({token})
 })
 

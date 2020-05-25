@@ -9,10 +9,10 @@ const jsonParser = require('body-parser').json()
 // internal deps
 const User = require('../model/user.js') 
 const Task = require('../model/task.js')
-const mailer = require('../lib/mailer.js')
 const bearer = require('../middleware/bearer-auth.js')
 const signing = require('../middleware/signing-middleare.js')
 const tomorrow = require('../lib/tomorrow.js')
+const mailTrigger = require('../lib/mail-trigger.js')
 
 // module constants 
 const taskRouter = new Router()
@@ -30,12 +30,11 @@ taskRouter.post('/task', bearer, jsonParser, signing, async (req, res) => {
   }
 
   let task = await Task.createTask(body)
-  await mailer.notifyTaskCreate(user, task).catch(console.error) 
+  await mailTrigger.notifyTaskCreate(user, task)
+  //await mailer.notifyTaskCreate(user, task).catch(console.error) 
   res.signJSON(task)
   tomorrow.register(task.id, () => {
-    // TODO: find a way to stop this from taking up memory
-    // because user and task obj will persist in mem for 24hrs
-    mailer.notifyTaskExpire(user, task).catch(console.error) 
+    mailTrigger.notifyTaskExpire(user, task).catch(console.error)
   })
 })
 
@@ -59,9 +58,8 @@ taskRouter.put('/task/:id', bearer, jsonParser, signing, async (req, res) => {
   } 
 
   let result = await task.update(req.body) 
-  // TODO: respond to clinet before mail without hanging tests?
   if (result.complted)
-    await mailer.notifyTaskComplete(user, result).catch(console.error) 
+    await mailTrigger.notifyTaskComplete(user, result)
   if (!result.draft)
     tomorrow.clear(task.id)
   res.signJSON(result)
