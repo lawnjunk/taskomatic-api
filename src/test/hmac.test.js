@@ -4,7 +4,7 @@
 require('dotenv').config({path: `${__dirname}/../.env`})
 
 // internal deps
-const hmac = require('../src/lib/hmac.js')
+const hmac = require('../server/lib/hmac.js')
 
 describe('hmac', () => {
   describe('hashData and verify', () => {

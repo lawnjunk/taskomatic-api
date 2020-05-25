@@ -5,7 +5,7 @@ require('dotenv').config(`${__dirname}/../.env`)
 const debug = require('debug')
 
 // internal deps
-const mailHandler = require('../src/lib/mailer-message-handler.js')
+const mailHandler = require('../mailer/message-handler.js')
 const mockUtil = require('./mock/mock-util.js')
 const mockUser = require('./mock/mock-user.js')
 const mockTask = require('./mock/mock-task.js')

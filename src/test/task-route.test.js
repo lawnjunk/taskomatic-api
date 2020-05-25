@@ -5,9 +5,9 @@ require('dotenv').config(`${__dirname}/../.env`)
 const request = require('superagent')
 
 // internal deps
-const db = require('../src/lib/db.js')
-const server = require('../src/lib/server.js')
-const Task = require('../src/model/task.js')
+const server = require('../server')
+const db = require('../server/lib/db.js')
+const Task = require('../server/model/task.js')
 const mockTask = require('./mock/mock-task.js')
 const mockUser = require('./mock/mock-user.js')
 const mockUtil = require('./mock/mock-util.js')

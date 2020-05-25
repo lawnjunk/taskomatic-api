@@ -3,7 +3,7 @@ const debug = require('debug')('app:mock-user')
 const faker = require('faker')
 
 // internal deps
-const User = require('../../src/model/user.js')
+const User = require('../../server/model/user.js')
 const mockUtil = require('./mock-util.js')
 
 // module state

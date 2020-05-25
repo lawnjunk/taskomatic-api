@@ -5,13 +5,13 @@ require('dotenv').config(`${__dirname}/../.env`)
 const request = require('superagent')
 
 // internal deps
-const db = require('../src/lib/db.js')
-const hmac = require('../src/lib/hmac.js')
-const server = require('../src/lib/server.js')
-const User = require('../src/model/user.js')
+const server = require('../server')
+const db = require('../server/lib/db.js')
+const hmac = require('../server/lib/hmac.js')
+const User = require('../server/model/user.js')
 const mockUtil = require('./mock/mock-util.js')
 const mockUser = require('./mock/mock-user.js')
-const util = require('../src/lib/util.js')
+const util = require('../server/lib/util.js')
 
 // module constants
 let apiURL = process.env.API_URL + '/auth'

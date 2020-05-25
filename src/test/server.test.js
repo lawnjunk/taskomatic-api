@@ -8,7 +8,7 @@ const debug = require('debug')('app:test-server')
 const request = require('superagent')
 
 // internal deps
-const server = require(`../src/lib/server.js`)
+const server = require(`../server`)
 
 // module constants
 const apiURL = process.env.API_URL

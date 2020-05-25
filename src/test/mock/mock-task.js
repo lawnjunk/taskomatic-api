@@ -4,7 +4,7 @@ const debug = require('debug')('app:mock-task')
 const faker = require('faker')
 
 // internal deps
-const Task = require('../../src/model/task.js')
+const Task = require('../../server/model/task.js')
 const mockUser = require('./mock-user.js')
 const mockUtil = require('./mock-util.js')
 

@@ -2,7 +2,7 @@
 // external mods
 const debug = require('debug')('app:mock-util')
 
-const db = require('../../src/lib/db.js')
+const db = require('../../server/lib/db.js')
 
 const writeItem = async (item) => {
   if(process.env.VERBOSE)

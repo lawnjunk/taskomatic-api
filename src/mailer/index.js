@@ -1,12 +1,16 @@
 'use strict'
 
+// external deps
 const debug = require('debug')('app:mailer')
 const redis = require('redis')
-const messageHandler = require('./mailer-message-handler.js')
+
+// internal modules
+const messageHandler = require('./message-handler.js')
 
 // module state
 let db = null
 
+// interface
 const start = async () => {
   debug('start')
   if(db) return 

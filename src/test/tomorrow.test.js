@@ -3,7 +3,7 @@
 // external deps
 
 // internal modules
-const tomorrow = require('../src/lib/tomorrow.js')
+const tomorrow = require('../server/lib/tomorrow.js')
 
 describe('tomorrow', () => {
   it('should fire off the callback', (done) => {

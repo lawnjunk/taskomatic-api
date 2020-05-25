@@ -2,8 +2,8 @@
 require('dotenv').config(`${__dirname}/../.env`)
 
 // internal deps
-const db = require('../src/lib/db.js')
-const User = require('../src/model/user.js')
+const db = require('../server/lib/db.js')
+const User = require('../server/model/user.js')
 const mockUser = require('./mock/mock-user.js')
 const mockUtil = require('./mock/mock-util.js')
 

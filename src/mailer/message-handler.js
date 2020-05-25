@@ -6,7 +6,7 @@ const nodemailer = require('nodemailer')
 const cowsay = require('cowsay')
 
 // internal deps
-const {base64Encode} = require('./util.js')
+const {base64Encode} = require('../server/lib/util.js')
 
 // module constants
 const from = process.env.EMAIL_USER

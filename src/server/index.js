@@ -7,11 +7,11 @@ const morgan = require('morgan')
 const cors = require('cors')
 
 // internal deps 
-const db = require('./db.js')
-let router = require('../route')
-let errorMessage = require('./error-message.js')
-const errorMiddleware = require('../middleware/error-middleware.js')
-const fourOhFourMiddleware = require('../middleware/fourohfour-middleware.js')
+const db = require('./lib/db.js')
+let router = require('./route')
+let errorMessage = require('./lib/error-message.js')
+const errorMiddleware = require('./middleware/error-middleware.js')
+const fourOhFourMiddleware = require('./middleware/fourohfour-middleware.js')
 
 // module constants
 const app = express()
