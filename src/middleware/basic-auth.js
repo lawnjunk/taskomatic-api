@@ -9,7 +9,7 @@ const User = require('../model/user.js')
 // helper functions
 let validateBasicAuth = async (email, password) => {
   debug('validateBasicAuth')
-  let user = await User.findByID('user:' + email)
+  let user = await User.fetchByID('user:' + email)
   return await user.verifyPassword(password)
 }
 

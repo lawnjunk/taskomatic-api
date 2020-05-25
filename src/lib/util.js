@@ -8,7 +8,7 @@ const {isDate} = valid.date
 const isBool = (value) => typeof value === 'boolean'
 const isDefined = (value) => value != undefined && value != null
 const base64Encode = (text) => Buffer.from(text).toString('base64')
-const base64Decode = (text) => Buffer.from(text).toString('ascii')
+const base64Decode = (text) => Buffer.from(text, 'base64').toString('ascii')
 
 const toBool = (value) => {
     switch(typeof value){

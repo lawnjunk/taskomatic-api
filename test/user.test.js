@@ -21,7 +21,7 @@ describe('User Model', () => {
 
   it('should find a user', async () => {
     const {user: mock} = await mockUser.getUser()
-    let user = await User.findByID(mock.id)
+    let user = await User.fetchByID(mock.id)
     expect(user instanceof User).toBeTruthy()
     expect(user.id).toBe(mock.id)
   })

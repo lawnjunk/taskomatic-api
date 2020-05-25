@@ -81,7 +81,9 @@ class User {
 
   async updatePassword(password){
     debug('updatePassword')
-    this.passwordHash = await hashPassword(props.password)
+    if(!password)
+      throw createError(400, 'password required')
+    this.passwordHash = await hashPassword(password)
     this.validate()
     return await db.writeItem(this)
   }
@@ -134,18 +136,19 @@ User.createUser = async (props) => {
   return await db.writeItem(user)
 }
 
-User.findByID = async (id) => {
-  debug('findById')
+User.fetchByID = async (id) => {
+  debug('fetchByID')
   let data = await db.fetchItem({id})
+  if(!data)
+    throw createError(404, 'no such user')
   return new User(data)
 }
 
-User.fetchByEmail = (email) => 
-  User.findByID('user:' + email)
+User.fetchByEmail = (email) => User.fetchByID('user:' + email)
 
 User.findByToken = async (token) => {
   let {id} = await jwtVerify(token, process.env.APP_SECRET)
-  let user = User.findByID(id)
+  let user = User.fetchByID(id)
   if(!user)
     throw createError(401, '_AUTH_ERROR: user not found')
   return user
