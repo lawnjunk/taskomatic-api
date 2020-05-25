@@ -79,9 +79,9 @@
   * moved the mailer into a microservice
     * it subscribes to a redis channel and fires off emails based on messages recieved
   * the api routes now just publish messages to the redis channel
+* 0.1.11 -- refactor && docs
 
 ## Todo Roadmap
-* 0.1.? -- refactor
 * 0.1.? -- dockerize
 * 0.1.? -- continuous deployment
 * 0.1.? -- mailer as microservice using redis pub/sub
