@@ -1,7 +1,6 @@
 'use strict'
 
 // external deps
-require('dotenv').config(`${__dirname}/../.env`)
 const debug = require('debug')
 const nodemailer = require('nodemailer')
 const cowsay = require('cowsay')
@@ -22,7 +21,7 @@ const mail = nodemailer.createTransport({
 })
 
 const verifyUserEmail = async ({user}) => { 
-  debug('verifyUserEmail')
+  console.log('verifyUserEmail')
   let subject =`Welcome to Task-o-Matic ${user.firstName}`
   let base64Email = base64Encode(user.email)
   let html = `<h1>${subject}</h1>
@@ -38,7 +37,7 @@ const verifyUserEmail = async ({user}) => {
 }
 
 const notifyTaskCreate = async ({user, task}) => {
-  debug('notifyTaskCreate')
+  console.log('notifyTaskCreate')
   let subject =`HEY ${user.firstName.toUpperCase()}, YOU HAVE A NEW TASK!`
   let base64TaskID = base64Encode(task.id)
   let html = `<h1>${subject}<h1>
@@ -56,7 +55,7 @@ const notifyTaskCreate = async ({user, task}) => {
 }
 
 const notifyTaskExpire = async ({user, task}) => {
-  debug('notifyTaskExpire')
+  console.log('notifyTaskExpire')
   let subject =`Sorry ${user.firstName.toUpperCase()}, your task expired.`
   let html = `<h1>${subject}<h1>
     <h2>The following task has expired.</h2>
@@ -71,7 +70,7 @@ const notifyTaskExpire = async ({user, task}) => {
 }
 
 const notifyTaskComplete = async ({user, task}) => {
-  debug('notifyTaskComplete')
+  console.log('notifyTaskComplete')
   let subject =`Great Job ${user.firstName.toUpperCase()}!`
   let html = `<h1>${subject}<h1>
     <h2>You have complted the following task</h2>
@@ -95,7 +94,7 @@ const router = {
 }
 
 module.exports = async (message) =>  {
-  debug('mailer message handler')
+  console.log('mailer message handler')
   let {action, data} = JSON.parse(message)
 
   let handler = router[action]

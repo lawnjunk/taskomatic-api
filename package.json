@@ -7,7 +7,8 @@
     "testTimeout": 10000
   },
   "scripts": {
-    "start": "node bin/taskomatic-api",
+    "start": "pm2 start bin/taskomatic-api --name taskomatic_api --exp-backoff-restart-delay=100",
+    "start-mailer": "pm2 start bin/taskomatic-mailer --name taskomatic_mailer --exp-backoff-restart-delay=100",
     "test": "jest test --runInBand"
   },
   "keywords": [],
@@ -25,6 +26,7 @@
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "node-mailer": "^0.1.1",
+    "pm2": "^4.4.0",
     "redis": "^3.0.2",
     "uuid": "^8.0.0",
     "valid.js": "^1.2.5"
