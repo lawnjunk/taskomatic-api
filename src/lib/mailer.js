@@ -2,6 +2,8 @@
 
 const debug = require('debug')('app:mailer')
 const redis = require('redis')
+const messageHandler = require('./mailer-message-handler.js')
+
 // module state
 let db = null
 
@@ -9,7 +11,7 @@ const start = async () => {
   debug('start')
   if(db) return 
   db = redis.createClient(process.env.REDIS_URI)
-  db.on('message', () => console.log('TODO: handle message'))
+  db.on('message', (channel, message) => messageHandler(message))
   db.subscribe('mail_queue')
   console.log('MAILER UP AND RUNNING')
 }

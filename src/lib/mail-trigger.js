@@ -8,6 +8,7 @@ const db = require('./db.js')
 
 //interface
 const triggerMessage = async (action, data) => {
+  debug('triggerMessage', action)
   let message = JSON.stringify({action, data})
   return await db.doit('publish', ['mail_queue', message])
 }
