@@ -80,11 +80,14 @@
     * it subscribes to a redis channel and fires off emails based on messages recieved
   * the api routes now just publish messages to the redis channel
 * 0.1.11 -- refactor && docs
+  * moved services into own dirs
+  * ensured 'use strict'
+  * cleanup comments 
+  * improved documentation
 
 ## Todo Roadmap
-* 0.1.? -- dockerize
 * 0.1.? -- continuous deployment
-* 0.1.? -- mailer as microservice using redis pub/sub
+* 0.1.? -- JS DOC
 * 1.0.0 -- GET JOB
 
 ## GOALS
@@ -110,6 +113,7 @@
   * TODO: ENHANCE the secret key with a protected route?
 * Make the backend in Typescript--
   * SKIPED
+
 ### DEV OPS
 * Deploy the application on AWS or GCP, or Azure
 * Make the app buildable as a container
