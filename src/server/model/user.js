@@ -10,7 +10,7 @@ const {promisify} = require('util')
 const jwt = require('jsonwebtoken')
 const createError = require('http-errors')
 
-// internal deps
+// internal modules 
 const db = require('../lib/db.js')
 const errorMessages = require('../lib/error-message.js')
 const {isEmail, isDefined, toBool, isBool}  = require('../lib/util.js')

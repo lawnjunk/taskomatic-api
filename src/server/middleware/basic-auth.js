@@ -1,9 +1,10 @@
 'use strict'
+
 // extern deps
 const debug = require('debug')('app:basic')
 const createError = require('http-errors')
 
-// intern deps
+// internal modules
 const User = require('../model/user.js')
 
 // helper functions

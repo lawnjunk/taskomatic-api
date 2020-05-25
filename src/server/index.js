@@ -6,7 +6,7 @@ const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
 
-// internal deps 
+// internal moduels
 const db = require('./lib/db.js')
 let router = require('./route')
 let errorMessage = require('./lib/error-message.js')
@@ -32,7 +32,7 @@ let start = () => {
   debug('start')
   return new Promise((resolve, reject) => {
     if (state.isOn) return reject(new Error(errorMessage.fatalBoot()))
-    return db.initClient()
+    return db.init()
     .then(() => {
       state.httpServer = app.listen(process.env.PORT, (err) => {
         if (err) return reject(err)
@@ -48,7 +48,7 @@ let stop = async () => {
   debug('stop')
   return new Promise((resolve, reject) => {
   if(!state.isOn) return reject(new Error(errorMessage.fatalShutdown()))
-    db.quitClient()
+    db.quit()
     .catch(console.error)
     .finally(() => {
       state.httpServer.close((err) => {

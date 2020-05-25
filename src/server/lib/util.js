@@ -1,7 +1,9 @@
 'use strict'
 
+// external deps
 const valid = require('valid.js')
 
+// interface
 const {isString} = valid.string
 const {isEmail} = valid.util
 const {isDate} = valid.date 

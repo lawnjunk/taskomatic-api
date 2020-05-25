@@ -11,10 +11,10 @@ const mockUtil = require('./mock/mock-util.js')
 
 // test suite
 describe('task model', () => {
-  beforeAll(db.initClient)
+  beforeAll(db.init)
   afterAll(async () => {
     await mockUtil.cleanup()
-    await db.quitClient()
+    await db.quit()
   })
 
   describe('createTask', () => {

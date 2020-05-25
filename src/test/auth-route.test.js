@@ -4,7 +4,7 @@
 require('dotenv').config(`${__dirname}/../.env`)
 const request = require('superagent')
 
-// internal deps
+// internal modules
 const server = require('../server')
 const db = require('../server/lib/db.js')
 const hmac = require('../server/lib/hmac.js')

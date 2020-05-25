@@ -1,10 +1,12 @@
 'use strict'
 
 // external deps
+require('dotenv').config(`${__dirname}/../.env`)
 
 // internal modules
 const tomorrow = require('../server/lib/tomorrow.js')
 
+// test suite
 describe('tomorrow', () => {
   it('should fire off the callback', (done) => {
     let fn =  jest.fn()

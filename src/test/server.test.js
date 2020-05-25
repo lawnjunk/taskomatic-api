@@ -1,9 +1,7 @@
 'use strict'
 
-// init env
-require('dotenv').config(`${__dirname}/../.env`)
-
 // extenal deps
+require('dotenv').config(`${__dirname}/../.env`)
 const debug = require('debug')('app:test-server')
 const request = require('superagent')
 

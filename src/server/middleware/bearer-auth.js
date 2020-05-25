@@ -5,7 +5,7 @@ const debug = require('debug')('app:bearer')
 const jwt = require('jsonwebtoken')
 const createError = require('http-errors')
 
-// internal deps
+// internal modules
 const User = require('../model/user.js')
 
 // interface

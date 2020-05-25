@@ -1,3 +1,5 @@
+'use strict'
+
 // extern deps
 const debug = require('debug')('app:mock-user')
 const faker = require('faker')

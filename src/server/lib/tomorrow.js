@@ -4,10 +4,9 @@
 const debug = require('debug')('app:tomorrow')
 
 // module constants
-// 24.5 hours in milliseconds
+// NOTE: 24.5 hours in milliseconds
 const tomorrowTimeout = 88200000  
 
-// cache
 const cache = {} 
 
 const clear = (id) => {

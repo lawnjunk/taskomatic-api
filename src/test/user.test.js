@@ -1,3 +1,4 @@
+'use strict'
 // external deps
 require('dotenv').config(`${__dirname}/../.env`)
 
@@ -7,11 +8,12 @@ const User = require('../server/model/user.js')
 const mockUser = require('./mock/mock-user.js')
 const mockUtil = require('./mock/mock-util.js')
 
+// test suite
 describe('User Model', () => {
-  beforeAll(db.initClient)
+  beforeAll(db.init)
   afterAll(async () => {
     await mockUtil.cleanup()
-    await db.quitClient()
+    await db.quit()
   })
 
   it('should create a user', async () => {

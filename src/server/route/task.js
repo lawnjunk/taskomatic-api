@@ -6,7 +6,7 @@ const {Router} = require('express')
 const createError = require('http-errors')
 const jsonParser = require('body-parser').json()
 
-// internal deps
+// internal modules 
 const User = require('../model/user.js') 
 const Task = require('../model/task.js')
 const bearer = require('../middleware/bearer-auth.js')

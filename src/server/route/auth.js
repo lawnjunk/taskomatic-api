@@ -5,7 +5,7 @@ const debug = require('debug')('app:auth-route')
 const jsonParser = require('body-parser').json()
 const {Router} = require('express')
 
-// internal deps
+// internal modules 
 const User = require('../model/user.js')
 const hmac = require('../lib/hmac.js')
 const basic = require('../middleware/basic-auth.js')
@@ -14,7 +14,7 @@ const signing = require('../middleware/signing-middleare.js')
 const mailTrigger = require('../lib/mail-trigger.js')
 const util = require('../lib/util.js')
 
-// route config 
+// interface
 const router = new Router()
 
 router.post('/auth', jsonParser, async (req, res) => {
@@ -52,5 +52,4 @@ router.get('/auth/verify/:id', async (req, res) => {
   res.redirect(backURL)
 })
 
-// interface
 module.exports = router

@@ -1,5 +1,5 @@
 'use strict'
-// internal deps
+// external deps
 const debug = require('debug')('app:signing')
 const hmac = require('../lib/hmac.js')
 const createError = require('http-errors')

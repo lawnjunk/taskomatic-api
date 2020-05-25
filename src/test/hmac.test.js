@@ -3,7 +3,7 @@
 // external deps
 require('dotenv').config({path: `${__dirname}/../.env`})
 
-// internal deps
+// internal modules
 const hmac = require('../server/lib/hmac.js')
 
 describe('hmac', () => {

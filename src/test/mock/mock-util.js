@@ -1,4 +1,5 @@
 'use strict'
+
 // external mods
 const debug = require('debug')('app:mock-util')
 
@@ -19,7 +20,7 @@ const cleanup = async () => {
 module.exports = {
   writeItem, 
   cleanup, 
-  init: db.initClient, 
-  quit: db.quitClient
+  init: db.init, 
+  quit: db.quit
 }
 

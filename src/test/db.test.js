@@ -1,4 +1,6 @@
-// external modules
+'use strict'
+
+// external deps
 require('dotenv').config(`${__dirname}/../.env`)
 
 // internal modules
@@ -8,9 +10,9 @@ const mockUtil = require('./mock/mock-util.js')
 
 // test suite
 describe('DB', () => {
-  beforeAll(db.initClient)
+  beforeAll(db.init)
   afterEach(mockUtil.cleanup)
-  afterAll(db.quitClient)
+  afterAll(db.quit)
 
   describe('writeItem', () => {
     it('should write and item that has an id', async () => {

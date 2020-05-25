@@ -1,12 +1,14 @@
+'use strict'
+
 // external deps
 const debug = require('debug')('app:db')
 const {promisify} = require('util')
 const redis = require('redis')
 
-// internal deps
+// internal modules
 const errorMessage = require(`./error-message.js`)
 
-// modual constants
+// modual state
 const state = {
   client: null,
   methods: {},
@@ -88,8 +90,8 @@ const objectToArray = (data) => {
 }
 
 // resolves the client
-const initClient = async () => {
-  debug('initClient')
+const init = async () => {
+  debug('init')
   if(state.client) throw new Error(errorMessage.fatalRedisInit)
   state.client = redis.createClient(process.env.REDIS_URI) 
   handleClientEvents(state.client)
@@ -97,8 +99,8 @@ const initClient = async () => {
   return state.client
 }
 
-const quitClient = async () => {
-  debug('quitClient')
+const quit = async () => {
+  debug('quit')
   let result = await doit('quit') 
   resetState()
   return result
@@ -203,8 +205,8 @@ const on = (msg, callback) => {
 module.exports = {
   on: protectInterfaceMethod(on),
   state,
-  initClient, // cant protect client if it dont exist :)
-  quitClient: protectInterfaceMethod(quitClient),
+  init, // cant protect client if it dont exist :)
+  quit: protectInterfaceMethod(quit),
   doit: protectInterfaceMethod(doit),
   // Items
   writeItem: protectInterfaceMethod(writeItem),

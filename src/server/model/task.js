@@ -1,11 +1,12 @@
 'use strict'
+
 // external deps
 const debug = require('debug')('app:task')
 const uuid = require('uuid').v1
 const createError = require('http-errors')
 const assert = require('assert')
 
-// internal deps
+// internal modules
 const db = require('../lib/db.js')
 const User = require('./user.js')
 const {isString, isEmail, isDate, isBool, toBool} = require('../lib/util.js')
