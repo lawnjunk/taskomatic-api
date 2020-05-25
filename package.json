@@ -7,8 +7,8 @@
     "testTimeout": 10000
   },
   "scripts": {
-    "start": "pm2 start bin/taskomatic-api --name taskomatic_api --exp-backoff-restart-delay=100",
-    "start-mailer": "pm2 start bin/taskomatic-mailer --name taskomatic_mailer --exp-backoff-restart-delay=100",
+    "start": "pm2 start bin/taskomatic-api.js --name taskomatic_api --exp-backoff-restart-delay=100",
+    "start-mailer": "pm2 start bin/taskomatic-mailer.js --name taskomatic_mailer --exp-backoff-restart-delay=100",
     "test": "jest test --runInBand"
   },
   "keywords": [],
