@@ -75,9 +75,12 @@
 * 0.1.9 -- profile routes
   * added routes for retriving and updating own profile
   * added a route to retrive a list of all profiles
+* 0.1.10 -- mailer micro service
+  * moved the mailer into a microservice
+    * it subscribes to a redis channel and fires off emails based on messages recieved
+  * the api routes now just publish messages to the redis channel
 
 ## Todo Roadmap
-* 0.1.10 -- mailer pub/sub with redis chanel
 * 0.1.? -- refactor
 * 0.1.? -- dockerize
 * 0.1.? -- continuous deployment
