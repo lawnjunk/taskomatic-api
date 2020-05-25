@@ -10,7 +10,7 @@ In production the application should be deployed behind an HTTPS-Proxy server to
 
 
 ## ABOUT
-This project is split into two services. The main service is a REST API, that allows a client to create an account, and then manage tasks. The secondary service is an automated email notification service. These services use a redis chanel to implament a PUB/SUB architecture. The diagram below shows how they whole system works. 
+This project is split into two services. The main service is a REST API, that allows a client to create an account, and then manage tasks. The secondary service is an automated email notification service. These services use a redis chanel to implament a PUB/SUB architecture. The diagram below shows how the mail services works. 
 
 ![](/asset/mailer.png)
 
