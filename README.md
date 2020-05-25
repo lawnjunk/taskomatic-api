@@ -160,6 +160,14 @@ Retrieve an authentication token for an existing user.
 }
 ```
 
+### GET /auth/verify/:base64email
+This is meant to be triggered by clicking a link in the onboarding email.
+* Requirements
+  * Make a HTTP GET requests to `/auth`
+  * No auth required
+* Response
+  * The server will redirect you back to where you came from
+
 ### PUT /auth
 Update a user's password.
 * Requirements
@@ -182,34 +190,102 @@ Get a list of all the profiles
 * Response
   * an Array of user models (the passwordHash) will be remove
 
+### GET /profile/self
+Get a list of all the profiles 
+* Requirements
+  * Make a HTTP GET requst to `/profile/self`
+  * Add a correctly formated Bearer-Authorization http header
+* Response
+  * the profile of the current user
+
+### PUT /profile/self
+Get a list of all the profiles 
+* Requirements
+  * Make a HTTP PUT requst to `/profile/self`
+  * Add a correctly formated Bearer-Authorization http header
+  * add JSON for updating the following properties
+    * `firstName`
+    * `lastName`
+    * `username`
+* Response
+  * the profile of the current user
+
 ## TASK 
 The `task` endpoint is used to manage the CRUD opperations of the task model.
 ### POST /task
+Update a user's password.
 * Requirements
+  * Make a HTTP POST requst to `/task`
+  * Add a correctly formated Bearer-Authorization http header
+  * Set the body of the request to a JSON object with your new password  
+    * `description` is required
+    * `draft` will default to true
+    * `completed` will default to false  
+    
+``` json
+{
+  "description": "Get eggs from the store.",
+  "draft": true, 
+  "completed": false
+}
+```
 * Response
+  * The server will send you back the task along with all the properties that were computed by the server.
 
 ### GET /task
 * Requirements
+* Make a HTTP GET requst to `/task`
+  * Add a correctly formated Bearer-Authorization http header
 * Response
+  * An array of all the tasks for the current user
 
 ### GET /task/:id
-*  Requirements
-*  Response
-
-### UPDATE /task/:id
 * Requirements
+* Make a HTTP GET requst to `/task/:id`
+  * Add a correctly formated Bearer-Authorization http header
+  * the ID of the task you want to retrieve
 * Response
+  * a task 
+  
+### PUT /task/:id
+* Requirements
+  * Make a HTTP PUT requst to `/task`
+  * Add a correctly formated Bearer-Authorization http header
+  * Set the body of the request to a JSON object with the values you want to update
+  * You can update the following values
+    * `description` 
+    * `draft`
+    * `completed` 
+* Response
+  * the updated task
 
 ### DELETE /task/:id
 * Requirements
+* Requirements
+  * Make a HTTP PUT requst to `/task/:id`
+  * Add a correctly formated Bearer-Authorization http header
 * Response
+  * a 201 status code
 
 ## RANDOM TASK
-
 The `/task/random` endpoint is used to manage the CRUD operations of the Task-Model, with the added side effect that it will automatically be marked as completed after a random interval within 10 seconds.
-### POST /task/random
-#### Requirements
-#### Response
+* Requirements
+  * Make a HTTP POST requst to `/task`
+  * Add a correctly formated Bearer-Authorization http header
+  * Set the body of the request to a JSON object with your new password  
+    * `description` is required
+    * `draft` will default to true
+    * `completed` will default to false  
+    
+``` json
+{
+  "description": "Get eggs from the store.",
+  "draft": true, 
+  "completed": false
+}
+```
+* Response
+  * The server will send you back the task along with all the properties that were computed by the server.
 
 # The Mail service
 ![](/asset/mailer.png)
