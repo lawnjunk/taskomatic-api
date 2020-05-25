@@ -172,3 +172,6 @@ The `/task/random` endpoint is used to manage the CRUD operations of the Task-Mo
 #### Requirements
 #### Response
 
+# The Mail service
+![](/asset/mailer.png)
+
