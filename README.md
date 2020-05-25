@@ -108,7 +108,9 @@ It should have the Value `"Bearer "` + `" "` +  `"token"`.
 `Authorization: Bearer ExampleEXAMPLEexampleEXAmpleExampleExampleexampleExAMPle`
 
 ## User Model CRUD
-Because the User model stores sensitive security data, the CRUD opperations are broken into two endpoints, `/auth` and `/profile`. 
+Because the User model stores sensitive security data, the CRUD opperations are broken into two endpoints, `/auth` and `
+
+`. 
 
 The `/auth` endpoint is used to manage the parts of the user model that have security conserts. It can do the folling
   * `POST /auth` will create a new User
@@ -173,13 +175,13 @@ Update a user's password.
 #### Response
 * A status code of 200
 
-## GET /profile
+### GET /profile
 Get a list of all the profiles 
-#### Requirements
-* Make a HTTP GET requst to `/profile`
-* Add a correctly formated Bearer-Authorization http header
-#### Response
-* an Array of user models (the passwordHash) will be remove
+* Requirements
+	* Make a HTTP GET requst to `/profile`
+	* Add a correctly formated Bearer-Authorization http header
+* Response
+	* an Array of user models (the passwordHash) will be remove
 
 ## TASK 
 The `task` endpoint is used to manage the CRUD opperations of the task model.
