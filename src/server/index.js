@@ -37,7 +37,7 @@ let start = () => {
       state.httpServer = app.listen(process.env.PORT, (err) => {
         if (err) return reject(err)
         state.isOn = true
-        debug('SERVER IS RUNNING ON PORT ' + process.env.PORT)
+        console.log('SERVER IS RUNNING ON PORT ' + process.env.PORT)
         resolve(state)
       })
     })
@@ -55,7 +55,7 @@ let stop = async () => {
         if(err) return reject(err)
         state.isOn = false
         state.httpServer = null
-        debug('SERVER SHUTDOWN COMPLETE')
+        console.log('SERVER SHUTDOWN COMPLETE')
         resolve(state)
       })
     })
