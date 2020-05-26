@@ -11,6 +11,8 @@ const {base64Encode} = require('../server/lib/util.js')
 // module constants
 const from = process.env.EMAIL_USER
 
+console.log(process.env.EMAIL_PASS)
+
 const mail = nodemailer.createTransport({
   host: process.env.EMAIL_SMTP,
   port: process.env.EMAIL_PORT,
@@ -29,12 +31,14 @@ const verifyUserEmail = async ({user}) => {
 <p>Please click link below to verify your email.</p>
 <p><a href="${process.env.API_URL}/auth/verify/${base64Email}">CLICK TO VERIFY</a></p>
 <strong>Thank you!</strong>`
-  return await mail.sendMail({
+  let result = await mail.sendMail({
     from, 
     html,
     subject,
     to: user.email,
   })
+  console.log('_EMAIL_SENT_ verifyUserEmail', user.email)
+  return result
 }
 
 const notifyTaskCreate = async ({user, task}) => {
@@ -47,12 +51,14 @@ const notifyTaskCreate = async ({user, task}) => {
     <p>${task.description}<p>
     <p><a href="${process.env.API_URL}/task/verify/${base64TaskID}">CLICK TO VERIFY</a></p>
     <strong>Thank you!</strong>`
-  return await mail.sendMail({
+  let result = await mail.sendMail({
     from, 
     html,
     subject,
     to: user.email,
   })
+  console.log('_EMAIL_SENT_ notifyTaskCreate', user.email)
+  return result
 }
 
 const notifyTaskExpire = async ({user, task}) => {
@@ -62,12 +68,14 @@ const notifyTaskExpire = async ({user, task}) => {
     <h2>The following task has expired.</h2>
     <pre>${cowsay.say({text: task.description})}</pre>
     <strong>Have a nice day.</strong>`
-  return await mail.sendMail({
+  let result = await mail.sendMail({
     from, 
     html,
     subject,
     to: user.email,
   })
+  console.log('_EMAIL_SENT_ notifyTaskExpire', user.email)
+  return result
 }
 
 const notifyTaskComplete = async ({user, task}) => {

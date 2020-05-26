@@ -4,7 +4,7 @@
 const debug = require('debug')('app:main')
 const express = require('express')
 const morgan = require('morgan')
-const cors = require('cors')
+//const cors = require('cors')
 
 // internal moduels
 const db = require('./lib/db.js')
@@ -16,7 +16,7 @@ const fourOhFourMiddleware = require('./middleware/fourohfour-middleware.js')
 // module constants
 const app = express()
   .use(morgan('common'))
-  .use(cors()) // TODO: setup CORS ORIGIN
+  //.use(cors()) // TODO: setup CORS ORIGIN
   .use(router)
   .use(fourOhFourMiddleware)
   .use(errorMiddleware)
