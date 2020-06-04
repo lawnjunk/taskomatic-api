@@ -11,23 +11,24 @@ const db = require('../lib/db.js')
 const User = require('../model/user.js')
 const bearer = require('../middleware/bearer-auth.js')
 const signing = require('../middleware/signing-middleare.js')
+const asyncMiddleware = require('../middleware/async-middleware.js')
 
 // module constats
 const profileRouter = new Router()
 
 // interface
-profileRouter.get('/profile/self', bearer, signing, async (req, res) => {
+profileRouter.get('/profile/self', bearer, signing, asyncMiddleware(async (req, res) => {
   debug('GET /pofile/self')
   res.signJSON(JSON.parse(req.user.toSafeJSON()))
-})
+}))
 
-profileRouter.put('/profile/self', bearer, jsonParser, signing, async (req, res) => {
+profileRouter.put('/profile/self', bearer, jsonParser, signing, asyncMiddleware(async (req, res) => {
   debug('PUT /pofile/self')
   let result = await req.user.updateProfile(req.body)
   res.signJSON(JSON.parse(result.toSafeJSON()))
-})
+}))
 
-profileRouter.get('/profile', bearer, signing, async (req, res) => {
+profileRouter.get('/profile', bearer, signing, asyncMiddleware(async (req, res) => {
   debug('GET /profile')
   let userKeys = await db.doit('keys', ['user:*'])
   let userProfiles = await Promise.all(userKeys.map(async (key) => {
@@ -35,6 +36,6 @@ profileRouter.get('/profile', bearer, signing, async (req, res) => {
     return JSON.parse(user.toSafeJSON())
   }))
   res.signJSON(userProfiles)
-})
+}))
 
 module.exports = profileRouter

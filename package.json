@@ -7,7 +7,7 @@
     "testTimeout": 10000
   },
   "scripts": {
-    "start": "pm2-runtime start bin/taskomatic-api.js",
+    "start": "node bin/taskomatic-api.js",
     "start-mailer": "pm2-runtime start bin/taskomatic-mailer.js",
     "test": "jest test --runInBand"
   },

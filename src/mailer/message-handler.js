@@ -11,8 +11,6 @@ const {base64Encode} = require('../server/lib/util.js')
 // module constants
 const from = process.env.EMAIL_USER
 
-console.log(process.env.EMAIL_PASS)
-
 const mail = nodemailer.createTransport({
   host: process.env.EMAIL_SMTP,
   port: process.env.EMAIL_PORT,
