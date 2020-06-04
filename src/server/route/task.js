@@ -11,6 +11,7 @@ const User = require('../model/user.js')
 const Task = require('../model/task.js')
 const bearer = require('../middleware/bearer-auth.js')
 const signing = require('../middleware/signing-middleare.js')
+const asyncMiddleware = require('../middleware/async-middleware.js')
 const tomorrow = require('../lib/tomorrow.js')
 const mailTrigger = require('../lib/mail-trigger.js')
 
@@ -18,7 +19,7 @@ const mailTrigger = require('../lib/mail-trigger.js')
 const taskRouter = new Router()
 
 // interface
-taskRouter.post('/task', bearer, jsonParser, signing, async (req, res) => {
+taskRouter.post('/task', bearer, jsonParser, signing, asyncMiddleware(async (req, res) => {
   const {user, body} = req
   if(req.body.email){
     let user = await User.fetchByEmail(req.body.email)
@@ -36,19 +37,19 @@ taskRouter.post('/task', bearer, jsonParser, signing, async (req, res) => {
   tomorrow.register(task.id, () => {
     mailTrigger.notifyTaskExpire(user, task).catch(console.error)
   })
-})
+}))
 
-taskRouter.get('/task/:id', bearer, signing, async (req, res) => {
+taskRouter.get('/task/:id', bearer, signing, asyncMiddleware(async (req, res) => {
   let task = await Task.fetchTaskById(req.params.id)
   res.signJSON(task)
-})
+}))
 
-taskRouter.get('/task', bearer, signing, async (req, res) => {
+taskRouter.get('/task', bearer, signing, asyncMiddleware(async (req, res) => {
   let task = await Task.fetchTaskListByUserEmail(req.user.email)
   res.signJSON(task)
-})
+}))
 
-taskRouter.put('/task/:id', bearer, jsonParser, signing, async (req, res) => {
+taskRouter.put('/task/:id', bearer, jsonParser, signing, asyncMiddleware(async (req, res) => {
   let task = await Task.fetchTaskById(req.params.id)
   if(req.body.email){
     let user = await User.fetchByEmail(req.body.email)
@@ -63,15 +64,15 @@ taskRouter.put('/task/:id', bearer, jsonParser, signing, async (req, res) => {
   if (!result.draft)
     tomorrow.clear(task.id)
   res.signJSON(result)
-})
+}))
 
-taskRouter.delete('/task/:id', bearer , async (req, res) => {
+taskRouter.delete('/task/:id', bearer , asyncMiddleware(async (req, res) => {
   let task = await Task.fetchTaskById(req.params.id)
   await task.delete()
   res.sendStatus(200)
-})
+}))
 
-taskRouter.post('/task/random', bearer, jsonParser, signing, async (req, res) => {
+taskRouter.post('/task/random', bearer, jsonParser, signing, asyncMiddleware(async (req, res) => {
   debug('POST /task/random')
   const {user, body} = req
   body.user = user
@@ -82,6 +83,6 @@ taskRouter.post('/task/random', bearer, jsonParser, signing, async (req, res) =>
     .catch(console.error)
   }, (Math.floor((Math.random() * 2)) * 1000) + 1000)
   res.signJSON(task)
-})
+}))
 
 module.exports = taskRouter

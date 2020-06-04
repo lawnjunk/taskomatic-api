@@ -15,11 +15,17 @@ const fourOhFourMiddleware = require('./middleware/fourohfour-middleware.js')
 
 // module constants
 const app = express()
+  .use(cors({
+    origin: process.env.CORS_ORIGIN,
+    methods: 'GET,HEAD,PUT,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 204
+  })) 
   .use(morgan('common'))
-  .use(cors()) // TODO: setup CORS ORIGIN
   .use(router)
   .use(fourOhFourMiddleware)
   .use(errorMiddleware)
+
 
 // module state
 const state = {
@@ -37,7 +43,7 @@ let start = () => {
       state.httpServer = app.listen(process.env.PORT, (err) => {
         if (err) return reject(err)
         state.isOn = true
-        debug('SERVER IS RUNNING ON PORT ' + process.env.PORT)
+        console.log('SERVER IS RUNNING ON PORT ' + process.env.PORT)
         resolve(state)
       })
     })
@@ -55,7 +61,7 @@ let stop = async () => {
         if(err) return reject(err)
         state.isOn = false
         state.httpServer = null
-        debug('SERVER SHUTDOWN COMPLETE')
+        console.log('SERVER SHUTDOWN COMPLETE')
         resolve(state)
       })
     })

@@ -14,7 +14,7 @@ let db = null
 const start = async () => {
   debug('start')
   if(db) return 
-  db = redis.createClient(process.env.REDIS_URI)
+  db = redis.createClient(process.env.REDIS_URI || 'redis://127.0.0.1:6379')
   db.on('message', (channel, message) => messageHandler(message))
   db.subscribe('mail_queue')
   debug('MAILER UP AND RUNNING')
